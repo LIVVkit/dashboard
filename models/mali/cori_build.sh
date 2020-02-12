@@ -1,4 +1,4 @@
 #!/bin/bash
 
-pushd MPAS || exit
-source /global/project/projectdirs/piscees/mpas/MPAS-Model/makeMALI
+pushd MPAS-Model || exit
+source /global/project/projectdirs/piscees/mpas/MPAS-Model-Opt/makeMALI_feb2020

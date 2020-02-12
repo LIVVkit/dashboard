@@ -1,5 +1,5 @@
-source_directory: /global/homes/k/kennedyj/MPAS  # NERSC
-build_directory: /global/homes/k/kennedyj/MPAS   # NERSC
+source_directory: /global/homes/m/mek/MPAS  # NERSC
+build_directory: /global/homes/m/mek/MPAS   # NERSC
 build_name: MALI
 configure_command: models/mali/cori_configure.sh
 build_command: models/mali/cori_build.sh
