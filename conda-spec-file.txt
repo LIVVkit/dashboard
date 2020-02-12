@@ -108,7 +108,7 @@ https://conda.anaconda.org/conda-forge/linux-64/cftime-1.0.3.4-py37hd352d35_1001
 https://conda.anaconda.org/conda-forge/noarch/cycler-0.10.0-py_1.tar.bz2
 https://conda.anaconda.org/conda-forge/linux-64/cytoolz-0.10.0-py37h516909a_0.tar.bz2
 https://conda.anaconda.org/conda-forge/linux-64/importlib_metadata-0.18-py37_0.tar.bz2
-https://conda.anaconda.org/xylar/noarch/jigsawpy-0.0.2-py_0.tar.bz2
+https://conda.anaconda.org/xylar/noarch/jigsawpy-0.0.3-py_0.tar.bz2
 https://conda.anaconda.org/conda-forge/linux-64/libnetcdf-4.6.2-hbdf4f91_1001.tar.bz2
 https://conda.anaconda.org/conda-forge/noarch/packaging-19.0-py_0.tar.bz2
 https://conda.anaconda.org/conda-forge/noarch/partd-1.0.0-py_0.tar.bz2
