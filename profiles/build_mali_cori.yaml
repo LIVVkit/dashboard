@@ -6,4 +6,7 @@ build_command: models/mali/cori_build.sh
 test_command: models/mali/run_test.sh
 cdash_section: Ice_sheet_models
 tests:
+  - dome_2000m
+  - dome_variable
   - hello_world
+  - livv
