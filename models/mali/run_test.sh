@@ -23,7 +23,7 @@ MALI_TEST_OUT_DIR=$HOME/MPAS/mali_test_output/test
 if [ $testname == "dome_2000m" ]
 then
     TEST_DIR_RUN=$MALI_TEST_RUN_DIR/landice/dome/2000m/halfar_analytic_test
-    TEST_DIR_OUT=$MALI_TEST_OUT_DIR/MALI/dome/dome/2000m/p1 
+    TEST_DIR_OUT=$MALI_TEST_OUT_DIR/MALI/dome/dome/2000m/p1
     pushd $TEST_DIR_RUN
     python setup_and_run_dome_testcase.py
     cp $TEST_DIR_RUN/run_model/*.png /project/projectdirs/piscees/www/mek/dome_2000m
@@ -33,11 +33,43 @@ elif [ $testname == "dome_variable" ]
 then
 
     TEST_DIR_RUN=$MALI_TEST_RUN_DIR/landice/dome/variable_resolution/halfar_analytic_test
-    TEST_DIR_OUT=$MALI_TEST_OUT_DIR/MALI/dome/dome/variable_resolution/p1 
+    TEST_DIR_OUT=$MALI_TEST_OUT_DIR/MALI/dome/dome/variable_resolution/p1
     pushd $TEST_DIR_RUN || exit
     python setup_and_run_dome_testcase.py
     cp $TEST_DIR_RUN/run_model/*.png /project/projectdirs/piscees/www/mek/dome_variable
     cp $TEST_DIR_RUN/run_model/* $TEST_DIR_OUT
+
+elif [ $testname == "ho_restart" ]
+then
+
+    TEST_DIR_RUN=$MALI_TEST_RUN_DIR/landice/dome/2000m/ho_restart_test
+    TEST_DIR_OUT=$MALI_TEST_OUT_DIR/MALI/dome/ho_restart_test/2000m/p1
+    pushd $TEST_DIR_RUN || exit
+    python setup_and_run_dome_testcase.py
+    cp $TEST_DIR_RUN/restart_run/*.png /project/projectdirs/piscees/www/mek/$testname
+    cp $TEST_DIR_RUN/restart_run/* $TEST_DIR_OUT
+
+elif [ $testname == "ho_decomposition" ]
+then
+
+    TEST_DIR_RUN=$MALI_TEST_RUN_DIR/landice/dome/2000m/ho_decomposition_test
+    TEST_DIR_OUT_1=$MALI_TEST_OUT_DIR/MALI/dome/ho_decomposition_test/2000m/p1
+    TEST_DIR_OUT_4=$MALI_TEST_OUT_DIR/MALI/dome/ho_decomposition_test/2000m/p4
+    pushd $TEST_DIR_RUN || exit
+    python setup_and_run_dome_testcase.py
+    cp $TEST_DIR_RUN/1proc_run/*.png /project/projectdirs/piscees/www/mek/$testname
+    cp $TEST_DIR_RUN/1proc_run/* $TEST_DIR_OUT_1
+    cp $TEST_DIR_RUN/4proc_run/* $TEST_DIR_OUT_4
+
+elif [ $testname == "ho_vs_sia" ]
+then
+
+    TEST_DIR_RUN=$MALI_TEST_RUN_DIR/landice/dome/2000m/ho_vs_sia_test
+    TEST_DIR_OUT=$MALI_TEST_OUT_DIR/MALI/dome/ho_vs_sia_test/2000m/p1
+    pushd $TEST_DIR_RUN || exit
+    python setup_and_run_dome_testcase.py
+    cp $TEST_DIR_RUN/ho_run/*.png /project/projectdirs/piscees/www/mek/$testname
+    cp $TEST_DIR_RUN/ho_run/* $TEST_DIR_OUT
 
 elif [ $testname == "livv" ]
 then
@@ -46,6 +78,7 @@ then
     OUTDIR=/project/projectdirs/piscees/www/mek/vv_`date '+%Y_%m_%d'`
     livv -v $TEST_DIR $REF_DIR -o $OUTDIR
     chmod -R 0755 $OUTDIR
+    ln -sf $OUTDIR /project/projectdirs/piscees/www/latest
 
 elif [ $testname == "hello_world" ]
 then

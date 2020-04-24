@@ -9,7 +9,8 @@ module load python
 # note this version has no netcdf support
 PIO=/global/homes/m/mperego/piscees/mpas/TPL/pio/pio-build/install-feb-5-2020
 
-source /global/homes/m/mperego/albany/albany-build/install-sfad12-28-jan-2020/export_albany.in
+# source /global/homes/m/mperego/albany/albany-build/install-sfad24-10-apr-2020/export_albany.in
+source /global/homes/m/mek/MPAS/Albany/albany-build/install-sfad24-10-apr-2020/export_albany.in
 #module swap craype/2.5.18
 #module swap gcc/8.2.0
 
@@ -25,4 +26,7 @@ TESTDIR=$HOME/MPAS/mali_test_run
 popd || exit
 pushd MPAS-Model/testing_and_setup/compass || exit
 $HOME/.conda/envs/compass_py3.7/bin/python setup_testcase.py -f $TESTDIR/general.config.landice --work_dir=$TESTDIR -m $TESTDIR/srun.xml -n 22
+$HOME/.conda/envs/compass_py3.7/bin/python setup_testcase.py -f $TESTDIR/general.config.landice --work_dir=$TESTDIR -m $TESTDIR/srun.xml -n 23
+$HOME/.conda/envs/compass_py3.7/bin/python setup_testcase.py -f $TESTDIR/general.config.landice --work_dir=$TESTDIR -m $TESTDIR/srun.xml -n 24
+$HOME/.conda/envs/compass_py3.7/bin/python setup_testcase.py -f $TESTDIR/general.config.landice --work_dir=$TESTDIR -m $TESTDIR/srun.xml -n 25
 $HOME/.conda/envs/compass_py3.7/bin/python setup_testcase.py -f $TESTDIR/general.config.landice --work_dir=$TESTDIR -m $TESTDIR/srun.xml -n 29

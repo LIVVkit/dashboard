@@ -8,5 +8,7 @@ cdash_section: Ice_sheet_models
 tests:
   - dome_2000m
   - dome_variable
-  - hello_world
+  - ho_decomposition
+  - ho_restart
+  - ho_vs_sia
   - livv
