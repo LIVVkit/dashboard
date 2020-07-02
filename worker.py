@@ -60,23 +60,34 @@ def run(build_profile, pyctest_args):
     pyctest.MODEL = build_profile['cdash_section']
     pyctest.BUILD_NAME = build_profile['build_name']
 
-    ready_machine = pyctest.command(["cp",
-                                     os.path.join(_HERE, build_profile['configure_command']),
-                                     os.path.join(_HERE, build_profile['build_command']),
-                                     os.path.join(_HERE, build_profile['test_command']),
-                                     "."])
-    ready_machine.SetWorkingDirectory(pyctest.SOURCE_DIRECTORY)
+    _ready_command = ["cp"]
+    for cmd in ["configure_command", "build_command", "test_command"]:
+        if cmd in build_profile:
+            _ready_command.append(os.path.join(_HERE, build_profile[cmd]))
+    _ready_command.append(".")
+    ready_machine = pyctest.command(_ready_command)
+
+    ready_machine.SetWorkingDirectory(pyctest.BINARY_DIRECTORY)
     ready_machine.SetErrorQuiet(False)
     ready_machine.Execute()
 
-    pyctest.CONFIGURE_COMMAND = " ".join(["bash", os.path.basename(build_profile['configure_command'])])
-    pyctest.BUILD_COMMAND = " ".join(["bash", os.path.basename(build_profile['build_command'])])
+    if build_profile.get("do_update", False):
+        # Update the source repo only if the do_update flag is set within config profile
+        pyctest.UPDATE_COMMAND = "/usr/bin/git"
+        pyctest.set("CTEST_UPDATE_TYPE", "git")
 
-    for test in build_profile['tests']:
-        test_runner = pyctest.test()
-        test_runner.SetName(test)
-        test_runner.SetCommand(["bash", os.path.basename(build_profile['test_command']), test])
-        test_runner.SetProperty("WORKING_DIRECTORY", pyctest.BINARY_DIRECTORY)
+    if "configure_command" in build_profile:
+        pyctest.CONFIGURE_COMMAND = " ".join(["bash", os.path.basename(build_profile['configure_command'])])
+
+    if "build_command" in build_profile:
+        pyctest.BUILD_COMMAND = " ".join(["bash", os.path.basename(build_profile['build_command'])])
+
+    if "tests" in build_profile:
+        for test in build_profile['tests']:
+            test_runner = pyctest.test()
+            test_runner.SetName(test)
+            test_runner.SetCommand(["bash", os.path.basename(build_profile['test_command']), test])
+            test_runner.SetProperty("WORKING_DIRECTORY", pyctest.BINARY_DIRECTORY)
 
     pyctest.run(pyctest.ARGUMENTS)
 

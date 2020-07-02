@@ -2,7 +2,13 @@
 # build_directory: /global/homes/m/mek/MPAS   # NERSC
 source_directory: /global/cscratch1/sd/mek/MPAS/MPAS-Model
 build_directory: /global/cscratch1/sd/mek/MPAS
-do_update: True
 build_name: MALI
-build_command: models/mali/cori_build.sh
+test_command: models/mali/run_test.sh
 cdash_section: Ice_sheet_models
+tests:
+  - dome_2000m
+  - dome_variable
+  - ho_decomposition
+  - ho_restart
+  - ho_vs_sia
+  - livv
