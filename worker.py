@@ -60,6 +60,9 @@ def run(build_profile, pyctest_args):
     pyctest.MODEL = build_profile['cdash_section']
     pyctest.BUILD_NAME = build_profile['build_name']
 
+    # Test Timeout set in build profile, otherwise default to 10 minutes
+    test_timeout = build_profile.get("test_timeout", 600)
+
     _ready_command = ["cp"]
     for cmd in ["configure_command", "build_command", "test_command"]:
         if cmd in build_profile:
@@ -70,11 +73,7 @@ def run(build_profile, pyctest_args):
     ready_machine.SetWorkingDirectory(pyctest.BINARY_DIRECTORY)
     ready_machine.SetErrorQuiet(False)
     ready_machine.Execute()
-
-    if build_profile.get("do_update", False):
-        # Update the source repo only if the do_update flag is set within config profile
-        pyctest.UPDATE_COMMAND = "/usr/bin/git"
-        pyctest.set("CTEST_UPDATE_TYPE", "git")
+    helpers.Cleanup(pyctest.BINARY_DIRECTORY)
 
     if "configure_command" in build_profile:
         pyctest.CONFIGURE_COMMAND = " ".join(["bash", os.path.basename(build_profile['configure_command'])])
@@ -84,11 +83,10 @@ def run(build_profile, pyctest_args):
 
     if "tests" in build_profile:
         for test in build_profile['tests']:
-            test_runner = pyctest.test()
+            test_runner = pyctest.test(properties={"TIMEOUT": f"{test_timeout:d}"})
             test_runner.SetName(test)
             test_runner.SetCommand(["bash", os.path.basename(build_profile['test_command']), test])
             test_runner.SetProperty("WORKING_DIRECTORY", pyctest.BINARY_DIRECTORY)
-
     pyctest.run(pyctest.ARGUMENTS)
 
 
