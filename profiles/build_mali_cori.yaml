@@ -3,6 +3,7 @@
 source_directory: /global/cscratch1/sd/mek/MPAS/MPAS-Model
 build_directory: /global/cscratch1/sd/mek/MPAS
 do_update: True
-build_name: MALI
+build_name: MALI-Build
+configure_command: models/mali/cori_configure.sh
 build_command: models/mali/cori_build.sh
 cdash_section: Ice_sheet_models

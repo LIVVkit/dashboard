@@ -1,6 +1,5 @@
 #!/bin/bash
 testname=$1
-module load python
 # >>> conda initialize >>>
 # !! Contents within this block are managed by 'conda init' !!
 __conda_setup="$('/usr/common/software/python/3.7-anaconda-2019.07/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
@@ -73,6 +72,15 @@ then
     cp $TEST_DIR_RUN/ho_run/*.png /project/projectdirs/piscees/www/mek/$testname
     cp $TEST_DIR_RUN/ho_run/* $TEST_DIR_OUT
 
+elif [ $testname == "regsuite" ]
+then
+    TEST_DIR_RUN=$SCRATCH/MPAS/mali_reg_suite
+    TEST_DIR_OUT=$MALI_TEST_OUT_DIR/MALI/mali_reg_suite
+    mkdir -p $TEST_DIR_OUT
+    pushd $TEST_DIR_RUN || exit
+    python ho_integration_test_suite.py || exit
+    cp -R $TEST_DIR_RUN $TEST_DIR_OUT
+
 elif [ $testname == "livv" ]
 then
     TEST_DIR=$HOME/MPAS/mali_test_output/test/MALI/
@@ -81,6 +89,8 @@ then
     livv -v $TEST_DIR $REF_DIR -o $OUTDIR || exit
     chmod -R 0755 $OUTDIR
     ln -sf $OUTDIR /project/projectdirs/piscees/www/latest
+    echo "Results available at: https://portal.nersc.gov/project/piscees/mek/index.html"
+    echo "LIVV Results available at: https://portal.nersc.gov/project/piscees/mek/vv_`date '+%Y_%m_%d'`"
 
 elif [ $testname == "hello_world" ]
 then
@@ -89,5 +99,3 @@ then
     git status
 
 fi
-echo "Results available at: https://portal.nersc.gov/project/piscees/mek/index.html"
-echo "LIVV Results available at: https://portal.nersc.gov/project/piscees/mek/vv_`date '+%Y_%m_%d'`"
