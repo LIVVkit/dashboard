@@ -74,8 +74,8 @@ then
 
 elif [ $testname == "regsuite" ]
 then
-    TEST_DIR_RUN=$SCRATCH/MPAS/mali_reg_suite
-    TEST_DIR_OUT=$MALI_TEST_OUT_DIR/MALI/mali_reg_suite
+    TEST_DIR_RUN=$SCRATCH/MPAS/MALI_Test
+    TEST_DIR_OUT=$MALI_TEST_OUT_DIR/MALI/MALI_Test
     mkdir -p $TEST_DIR_OUT
     pushd $TEST_DIR_RUN || exit
     python ho_integration_test_suite.py || exit
