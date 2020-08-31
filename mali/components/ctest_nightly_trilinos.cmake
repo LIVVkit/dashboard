@@ -1,15 +1,15 @@
 
 cmake_minimum_required (VERSION 2.8)
-set (CTEST_DO_SUBMIT ON)
+set (CTEST_DO_SUBMIT "$ENV{CTEST_DO_SUBMIT}")
 set (CTEST_TEST_TYPE Nightly)
 
 # What to build and test
 set (DOWNLOAD_TRILINOS TRUE)
-set (CLEAN_BUILD TRUE) 
+set (CLEAN_BUILD TRUE)
 set (BUILD_TRILINOS TRUE)
 
 # Begin User inputs:
-set (CTEST_SITE "cori-knl" ) # generally the output of hostname
+set (CTEST_SITE "cori-knl") # generally the output of hostname
 set (CTEST_DASHBOARD_ROOT "$ENV{TEST_DIRECTORY}" ) # writable path
 set (CTEST_SCRIPT_DIRECTORY "$ENV{SCRIPT_DIRECTORY}" ) # where the scripts live
 set (CTEST_CMAKE_GENERATOR "Unix Makefiles" ) # What is your compilation apps ?
@@ -20,7 +20,6 @@ set (INITIAL_LD_LIBRARY_PATH $ENV{LD_LIBRARY_PATH})
 set (CTEST_PROJECT_NAME "LIVVkit" )
 set (CTEST_SOURCE_NAME src)
 set (CTEST_BUILD_NAME "Trilinos")
-set (CTEST_MODEL "Components")
 set (CTEST_BINARY_NAME build)
 
 
@@ -34,7 +33,7 @@ if (NOT EXISTS "${CTEST_BINARY_DIRECTORY}")
   file (MAKE_DIRECTORY "${CTEST_BINARY_DIRECTORY}")
 endif ()
 
-configure_file (${CTEST_SCRIPT_DIRECTORY}/CTestConfig.cmake
+configure_file ($ENV{CTEST_CONFIG_DIR}/CTestConfig.cmake
   ${CTEST_SOURCE_DIRECTORY}/CTestConfig.cmake COPYONLY)
 
 set (CTEST_NIGHTLY_START_TIME "01:00:00 UTC")

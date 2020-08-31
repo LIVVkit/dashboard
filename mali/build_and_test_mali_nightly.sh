@@ -5,11 +5,12 @@
 export SCRIPT_DIR=/global/homes/m/mek/nightly_test_scripts/mali
 export BASE_DIR=/global/homes/m/mek/MPAS/Components
 export EXE_DIR=/global/homes/m/mek/MPAS/Components
-export CTEST_DO_SUBMIT=OFF
+export CTEST_DO_SUBMIT=ON
+export CTEST_CONFIG_DIR=$HOME/nightly_test_scripts/
 
 pushd $SCRIPT_DIR || exit
 
-source /global/homes/m/mperego/cori_modules.sh > modules.log
+source /global/homes/m/mperego/cori_modules.sh >& modules.log
 module unload craype-hugepages2M
 module load darshan
 
