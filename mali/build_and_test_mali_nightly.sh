@@ -10,7 +10,8 @@ export CTEST_CONFIG_DIR=$HOME/nightly_test_scripts/
 
 pushd $SCRIPT_DIR || exit
 
-source /global/homes/m/mperego/cori_modules.sh >& modules.log
+# source /global/homes/m/mperego/cori_modules.sh >& modules.log
+source $CTEST_CONFIG_DIR/mali_modules.sh >& modules.log
 module unload craype-hugepages2M
 module load darshan
 
