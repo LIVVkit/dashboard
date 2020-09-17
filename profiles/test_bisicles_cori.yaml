@@ -1,0 +1,9 @@
+source_directory: /global/cscratch1/sd/mek/bisicles/
+build_directory: /global/cscratch1/sd/mek/bisicles/
+build_name: BISICLES
+# configure_command: models/bisicles/cori_configure.sh
+# build_command: models/bisicles/cori_build.sh
+test_command: models/bisicles/run_test.sh
+cdash_section: BISICLES
+tests:
+   - inputs.petsc
