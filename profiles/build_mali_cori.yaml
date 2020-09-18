@@ -6,4 +6,4 @@ do_update: True
 build_name: MALI-Build
 configure_command: models/mali/cori_configure.sh
 build_command: models/mali/cori_build.sh
-cdash_section: Ice_sheet_models
+cdash_section: MALI
