@@ -20,6 +20,7 @@ conda activate compass_py3.7
 MALI_TEST_RUN_DIR=$TEST_ROOT/MPAS/mali_test_run
 MALI_TEST_OUT_DIR=$HOME/MPAS/mali_test_output/test
 MALI_COMMIT=`cd $TEST_ROOT/MPAS/MPAS-Model && git log -p -1`
+echo "Hostname: "`hostname`
 
 if [ $testname == "dome_2000m" ]
 then

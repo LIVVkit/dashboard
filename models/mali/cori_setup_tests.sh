@@ -1,14 +1,14 @@
 #!/bin/bash
 
-source /global/homes/m/mperego/cori_modules.sh
+source $HOME/nightly_test_scripts/mali_modules.sh
 module unload craype-hugepages2M
 module load darshan
 
-TESTDIR=$SCRATCH/MPAS/MALI_Test
+TESTDIR=$CSCRATCH/MPAS/MALI_Test
 pyexe=$HOME/.conda/envs/compass_py3.7/bin/python
 config=$TESTDIR/general.config.landice
 # srunfile=$TESTDIR/srun.xml
-srunfile=$SCRATCH/MPAS/MPAS-Model/testing_and_setup/compass/runtime_definitions/srun.xml
+srunfile=$CSCRATCH/MPAS/MPAS-Model/testing_and_setup/compass/runtime_definitions/srun.xml
 
 pushd MPAS-Model/testing_and_setup/compass || exit
 # Individual test setup
@@ -21,7 +21,7 @@ pushd MPAS-Model/testing_and_setup/compass || exit
 # Setup regression suite
 $pyexe manage_regression_suite.py \
 --test_suite landice/regression_suites/ho_integration_test_suite.xml \
---baseline_dir $SCRATCH/MPAS/MALI_Reference \
+--baseline_dir $CSCRATCH/MPAS/MALI_Reference \
 --config_file $config \
 --work_dir $TESTDIR \
 --model_runtime $srunfile \
