@@ -36,7 +36,7 @@ PY_EXE=/global/homes/m/mek/.conda/envs/pyctest/bin/python3
 TESTDIR=/global/homes/m/mek/dashboard
 
 pushd $TESTDIR || exit
-$PY_EXE worker.py profiles/build_mali_cori.yaml --site cori-knl -S
+$PY_EXE worker.py profiles/build_mali_cori.yaml --site cori-knl -S || exit
 
 # Now submit MALI Tests to queue
 popd
