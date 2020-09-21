@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-source $HOME/nightly_test_scripts/bisicles_modules.sh
+source $HOME/dashboard/nightly_scripts/bisicles_modules.sh
 export BISICLES_HOME=$CSCRATCH/bisicles
 cd $BISICLES_HOME
 pushd Chombo || exit

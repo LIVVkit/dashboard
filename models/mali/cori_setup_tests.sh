@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source $HOME/nightly_test_scripts/mali_modules.sh
+source $HOME/dashboard/nightly_scripts/mali_modules.sh
 module unload craype-hugepages2M
 module load darshan
 

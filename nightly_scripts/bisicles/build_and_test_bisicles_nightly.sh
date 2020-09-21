@@ -2,8 +2,8 @@
 # This is run on cori04 nightly
 
 # Setup modules and environment variables
-export CTEST_CONFIG_DIR=$HOME/nightly_test_scripts/
-export SCRIPT_DIR=$HOME/nightly_test_scripts/bisicles
+export CTEST_CONFIG_DIR=$HOME/dashboard/nightly_scripts/
+export SCRIPT_DIR=$HOME/dashboard/nightly_scripts/bisicles
 export BASE_DIR=$CSCRATCH/bisicles
 export COMP_DIR=$BASE_DIR/Components
 

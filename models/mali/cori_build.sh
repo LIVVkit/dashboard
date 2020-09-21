@@ -1,13 +1,13 @@
 #!/bin/bash
 
 pushd MPAS-Model || exit
-source /global/homes/m/mperego/cori_modules.sh
+source $HOME/dashboard/nightly_scripts/mali_modules.sh
 module unload craype-hugepages2M
 module load darshan
 
 # note this version has no netcdf support
-export PIO=/global/u2/m/mek/MPAS/Components/build/PIOInstall
-source /global/u2/m/mek/MPAS/Components/build/AlbanyInstall/export_albany.in
+export PIO=$HOME/MPAS/Components/build/PIOInstall
+source $HOME/MPAS/Components/build/AlbanyInstall/export_albany.in
 
 export CRAYPE_LINK_TYPE=STATIC
 MPAS_EXTERNAL_LIBS="$ALBANY_LINK_LIBS -lstdc++"

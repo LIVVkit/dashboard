@@ -2,11 +2,11 @@
 # This is run on cori04 nightly
 
 # Setup modules and environment variables
-export SCRIPT_DIR=/global/homes/m/mek/nightly_test_scripts/mali
+export SCRIPT_DIR=/global/homes/m/mek/dashboard/nightly_scripts/mali
 export BASE_DIR=/global/homes/m/mek/MPAS/Components
 export EXE_DIR=/global/homes/m/mek/MPAS/Components
 export CTEST_DO_SUBMIT=ON
-export CTEST_CONFIG_DIR=$HOME/nightly_test_scripts/
+export CTEST_CONFIG_DIR=$HOME/nightly_scripts/
 
 pushd $SCRIPT_DIR || exit
 

@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-source $HOME/nightly_test_scripts/bisicles_modules.sh
+source $HOME/dashboard/nightly_scripts/bisicles_modules.sh
 # module load cray-hdf5-parallel
 # module load cray-netcdf-hdf5parallel
 # module load cray-shmem
