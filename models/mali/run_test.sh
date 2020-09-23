@@ -75,12 +75,20 @@ then
 
 elif [ $testname == "regsuite" ]
 then
-    TEST_DIR_RUN=$SCRATCH/MPAS/MALI_Test
-    TEST_DIR_OUT=$MALI_TEST_OUT_DIR/MALI/MALI_Test
+    # Check if yesterday's test was archived (may not happen if tests time out before archive step)
+
+    yesterday_arch = $CSCRATCH/MALI/MALI_`date --date="1 day ago" +"%Y-%m-%d"`
+    TEST_DIR_RUN=$CSCRATCH/MPAS/MALI_Test
+    TEST_DIR_ARCH=$CSCRATCH/MPAS/MALI_`date +"%Y-%m-%d"`
+
+    if [[ ! -d $yesterday_arch && -d $TEST_DIR_RUN ]]; then
+        cp -R $TEST_DIR_RUN $yesterday_arch
+    fi
+
     mkdir -p $TEST_DIR_OUT
     pushd $TEST_DIR_RUN || exit
     python ho_integration_test_suite.py || exit
-    cp -R $TEST_DIR_RUN $TEST_DIR_OUT
+    cp -R $TEST_DIR_RUN $TEST_DIR_ARCH
 
 elif [ $testname == "livv" ]
 then
