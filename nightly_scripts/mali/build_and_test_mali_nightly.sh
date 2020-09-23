@@ -6,7 +6,7 @@ export SCRIPT_DIR=/global/homes/m/mek/dashboard/nightly_scripts/mali
 export BASE_DIR=/global/homes/m/mek/MPAS/Components
 export EXE_DIR=/global/homes/m/mek/MPAS/Components
 export CTEST_DO_SUBMIT=ON
-export CTEST_CONFIG_DIR=$HOME/nightly_scripts/
+export CTEST_CONFIG_DIR=$HOME/dashboard/nightly_scripts/
 
 pushd $SCRIPT_DIR || exit
 
