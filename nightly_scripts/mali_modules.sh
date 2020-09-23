@@ -5,7 +5,7 @@ module load boost
 module load cray-netcdf-hdf5parallel
 module load cray-parallel-netcdf
 module load cray-tpsl
-module load python
+# module load python
 
 export CRAYPE_LINK_TYPE=STATIC
 module list
