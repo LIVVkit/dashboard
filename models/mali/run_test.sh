@@ -73,11 +73,11 @@ then
     cp $TEST_DIR_RUN/ho_run/*.png /project/projectdirs/piscees/www/mek/$testname
     cp $TEST_DIR_RUN/ho_run/* $TEST_DIR_OUT
 
-elif [ $testname == "regsuite" ]
+elif [ $testname == "ho_regsuite" ]
 then
     # Check if yesterday's test was archived (may not happen if tests time out before archive step)
 
-    yesterday_arch = $CSCRATCH/MALI/MALI_`date --date="1 day ago" +"%Y-%m-%d"`
+    yesterday_arch=$CSCRATCH/MALI/MALI_`date --date="1 day ago" +"%Y-%m-%d"`
     TEST_DIR_RUN=$CSCRATCH/MPAS/MALI_Test
     TEST_DIR_ARCH=$CSCRATCH/MPAS/MALI_`date +"%Y-%m-%d"`
 
@@ -90,6 +90,22 @@ then
     python ho_integration_test_suite.py || exit
     cp -R $TEST_DIR_RUN $TEST_DIR_ARCH
 
+elif [ $testname == "regsuite" ]
+then
+    # Check if yesterday's test was archived (may not happen if tests time out before archive step)
+    yesterday_arch=$CSCRATCH/MALI/MALI_`date --date="1 day ago" +"%Y-%m-%d"`
+    TEST_DIR_RUN=$CSCRATCH/MPAS/MALI_Test
+    TEST_DIR_ARCH=$CSCRATCH/MPAS/MALI_`date +"%Y-%m-%d"`
+
+    if [[ ! -d $yesterday_arch && -d $TEST_DIR_RUN ]]; then
+        cp -R $TEST_DIR_RUN $yesterday_arch
+    fi
+
+    mkdir -p $TEST_DIR_OUT
+    pushd $TEST_DIR_RUN || exit
+    python combined_integration_test_suite.py || exit
+    cp -R $TEST_DIR_RUN $TEST_DIR_ARCH
+
 elif [ $testname == "livv" ]
 then
     TEST_DIR=$HOME/MPAS/mali_test_output/test/MALI/
@@ -100,6 +116,19 @@ then
     ln -sf $OUTDIR /project/projectdirs/piscees/www/latest
     echo "Results available at: https://portal.nersc.gov/project/piscees/mek/index.html"
     echo "LIVV Results available at: https://portal.nersc.gov/project/piscees/mek/vv_`date '+%Y_%m_%d'`"
+
+
+elif [[ $testname == echo_* ]]
+then
+
+    # Echo test results as a test so the results are sent to CDASH separtely
+    IFS="_" read -ra split <<< "$testname"
+    case=("${split[@]:1}")
+    case=$(IFS=_ ; echo "${case[*]}")
+
+    # TEST_DIR_ARCH=$CSCRATCH/MPAS/MALI_`date +"%Y-%m-%d"`/case_outputs
+    TEST_DIR_ARCH=$HOME/Data/MALI_Test/case_outputs
+    cat $TEST_DIR_ARCH/$case
 
 elif [ $testname == "hello_world" ]
 then
