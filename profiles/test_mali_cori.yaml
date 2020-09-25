@@ -9,9 +9,13 @@ cdash_section: MALI
 test_timeout: 5940
 tests:
   - regsuite
-#   - livv
-#   - dome_2000m
-#   - dome_variable
-#   - ho_decomposition
-#   - ho_restart
-#   - ho_vs_sia
+  - echo_Circular_shelf_decomposition_test
+  - echo_HO_dome_restart_test
+  - echo_MISMIP+_restart_test
+  - echo_Confined_shelf_decomposition_test
+  - echo_HO_dome_varres_decomposition_test
+  - echo_Thwaites_4km_restart_test
+  - echo_HO_GIS_restart_test
+  - echo_HO_dome_varres_restart_test
+  - echo_HO_dome_decomposition_test
+  - echo_HO_dome_vs._SIA_dome_test
