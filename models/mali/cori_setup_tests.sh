@@ -20,7 +20,7 @@ pushd MPAS-Model/testing_and_setup/compass || exit
 
 # Setup regression suite
 $pyexe manage_regression_suite.py \
---test_suite landice/regression_suites/ho_integration_test_suite.xml \
+--test_suite landice/regression_suites/combined_integration_test_suite.xml \
 --baseline_dir $CSCRATCH/MPAS/MALI_Reference \
 --config_file $config \
 --work_dir $TESTDIR \
