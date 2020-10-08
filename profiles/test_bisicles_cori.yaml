@@ -1,0 +1,8 @@
+source_directory: /global/cscratch1/sd/mek/bisicles/
+build_directory: /global/cscratch1/sd/mek/bisicles/
+build_name: BISICLES-Test
+test_command: models/bisicles/run_test.sh
+cdash_section: BISICLES
+test_timeout: 840
+tests:
+   - inputs.test
