@@ -1,21 +1,32 @@
-# source_directory: /global/homes/m/mek/MPAS  # NERSC
-# build_directory: /global/homes/m/mek/MPAS   # NERSC
 source_directory: /global/cscratch1/sd/mek/MPAS/MPAS-Model
 build_directory: /global/cscratch1/sd/mek/MPAS
 build_name: MALI-Test
 build_command: models/mali/cori_setup_tests.sh
 test_command: models/mali/run_test.sh
 cdash_section: MALI
-test_timeout: 5940
+test_timeout: 7000
 tests:
   - regsuite
   - echo_Circular_shelf_decomposition_test
-  - echo_HO_dome_restart_test
-  - echo_MISMIP+_restart_test
   - echo_Confined_shelf_decomposition_test
-  - echo_HO_dome_varres_decomposition_test
-  - echo_Thwaites_4km_restart_test
-  - echo_HO_GIS_restart_test
-  - echo_HO_dome_varres_restart_test
+  - echo_Dome_decomposition_test
+  - echo_Dome_restart_test
+  - echo_Dome_varres_decomposition_test
+  - echo_Dome_varres_restart_test
+  - echo_EISMINT2-F_decomposition_test
+  - echo_EISMINT2-F_enthalpy_decomposition_test
+  - echo_EISMINT2-F_enthalpy_restart_test
+  - echo_EISMINT2-F_restart_test
+  - echo_GIS_decomposition_test
+  - echo_GIS_restart_test
   - echo_HO_dome_decomposition_test
+  - echo_HO_dome_restart_test
+  - echo_HO_dome_varres_decomposition_test
+  - echo_HO_dome_varres_restart_test
   - echo_HO_dome_vs._SIA_dome_test
+  - echo_HO_GIS_restart_test
+  - echo_hydro-radial_decomposition_test
+  - echo_hydro-radial_restart_test
+  - echo_Kleiner_enthalpy_benchmark_A
+  - echo_MISMIP+_restart_test
+  - echo_Thwaites_4km_restart_test
