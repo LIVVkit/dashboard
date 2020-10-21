@@ -19,6 +19,8 @@ pushd MPAS-Model/testing_and_setup/compass || exit
 # $pyexe setup_testcase.py -f $config --work_dir=$TESTDIR -m $srunfile -n 29
 
 # Setup regression suite
+rm -f $TESTDIR/case_outputs/*
+
 $pyexe manage_regression_suite.py \
 --test_suite landice/regression_suites/combined_integration_test_suite.xml \
 --baseline_dir $CSCRATCH/MPAS/MALI_Reference \
