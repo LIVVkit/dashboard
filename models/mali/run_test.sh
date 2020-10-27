@@ -129,8 +129,9 @@ then
 
     TEST_DIR_ARCH=$TEST_ROOT/MPAS/MALI_Test/case_outputs
     # TEST_DIR_ARCH=$HOME/Data/MALI_Test/case_outputs
-    cat $TEST_DIR_ARCH/$case
-    if [[ grep -E 'FAIL|Traceback' $TEST_DIR_ARCH/$case ]]
+    cat $TEST_DIR_ARCH/$case || exit
+
+    if grep -E 'FAIL|Traceback' $TEST_DIR_ARCH/$case
     then
         exit 1
     else
