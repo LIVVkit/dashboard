@@ -11,5 +11,6 @@ export PETSC_DIR=/global/common/software/m1041/petsc_install/petsc_knl_intel
 export PETSC_ARCH=
 
 # pushd BISICLES/CISM-interface/exec2D || exit
-pushd BISICLES/code/exec2D
+# pushd BISICLES/code/exec2D
+pushd BISICLES/code/test
 make -j4 all MPI=TRUE USE_PETSC=TRUE DEBUG=FALSE OPT=TRUE
