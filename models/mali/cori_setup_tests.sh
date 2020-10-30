@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source $HOME/dashboard/nightly_scripts/mali_modules.sh
+source $HOME/dashboard/nightly_scripts/mali_modules.sh > modules.log
 module unload craype-hugepages2M
 module load darshan
 
@@ -28,4 +28,4 @@ $pyexe manage_regression_suite.py \
 --work_dir $TESTDIR \
 --model_runtime $srunfile \
 --clean \
---setup
+--setup || exit
