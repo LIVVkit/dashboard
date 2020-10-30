@@ -6,11 +6,12 @@ echo "Hostname: "`hostname`
 # eval "srun -n 1 ${driver}" "$1"
 
 pushd BISICLES/code/test || exit
-eval "srun -n $1.Linux.64.CC.ftn.OPT.MPI.PETSC.ex"
+eval "srun -n 1 $1.Linux.64.CC.ftn.OPT.MPI.PETSC.ex"
+cat pout.0 || exit
 
-if grep -E "pass" pout.0
-then
-    exit 1
-else
-    exit 0
-fi
+# if grep -E "pass" pout.0
+# then
+#     exit 1
+# else
+#     exit 0
+# fi
