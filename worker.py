@@ -91,9 +91,20 @@ def run(build_profile, pyctest_args):
     if "tests" in build_profile:
         for test in build_profile["tests"]:
             test_runner = pyctest.test(properties={"TIMEOUT": f"{test_timeout:d}"})
-            test_runner.SetName(test)
+
+            # Echo tests are comma separated so two arguments are passed to the
+            # bash script to avoid bash having to do string processing
+            # the test will be in the yaml file as (e.g.: echo,Dome_restart_test)
+            # and the test `name` would be echo_Dome_restart_test to match the old style
+            # If there's no comma in the test name, the split/re-join doesn't have any effect
+            test_runner.SetName("_".join(test.split(",")))
+
             test_runner.SetCommand(
-                ["bash", os.path.basename(build_profile["test_command"]), test]
+                [
+                    "bash",
+                    os.path.basename(build_profile["test_command"]),
+                    *test.split(","),
+                ]
             )
             test_runner.SetProperty("WORKING_DIRECTORY", pyctest.BINARY_DIRECTORY)
     pyctest.run(pyctest.ARGUMENTS)

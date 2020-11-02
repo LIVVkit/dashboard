@@ -129,6 +129,8 @@ def main(send_mail=False):
     emails = get_email_list("mali")
     mail_cmd = f'/usr/bin/mail -s "{subject}" "{emails}" -F "Michael Kelleher" < txt_summary.txt'
     if send_mail:
+        _frame = "x"
+        print(f"{45 * _frame}\n{_frame}{'SENDING E-MAIL':^43s}{_frame}\n{45 * _frame}")
         os.system(mail_cmd)
     else:
         print(mail_cmd)

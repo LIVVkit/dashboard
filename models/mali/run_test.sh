@@ -1,5 +1,6 @@
 #!/bin/bash
 testname=$1
+casename=$2
 # >>> conda initialize >>>
 # !! Contents within this block are managed by 'conda init' !!
 __conda_setup="$('/usr/common/software/python/3.7-anaconda-2019.07/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
@@ -119,19 +120,15 @@ then
     echo "LIVV Results available at: https://portal.nersc.gov/project/piscees/mek/vv_`date '+%Y_%m_%d'`"
 
 
-elif [[ $testname == echo_* ]]
+elif [[ $testname == "echo" ]]
 then
 
     # Echo test results as a test so the results are sent to CDASH separtely
-    IFS="_" read -ra split <<< "$testname"
-    case=("${split[@]:1}")
-    case=$(IFS=_ ; echo "${case[*]}")
-
-    TEST_DIR_ARCH=$TEST_ROOT/MPAS/MALI_Test/case_outputs
+    TEST_DIR=$TEST_ROOT/MPAS/MALI_Test/case_outputs
     # TEST_DIR_ARCH=$HOME/Data/MALI_Test/case_outputs
-    cat $TEST_DIR_ARCH/$case || exit
+    cat $TEST_DIR/$casename || exit
 
-    if grep -E 'FAIL|Traceback' $TEST_DIR_ARCH/$case
+    if grep -E 'FAIL|Traceback' $TEST_DIR/$casename
     then
         exit 1
     else
