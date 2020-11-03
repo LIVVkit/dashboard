@@ -4,7 +4,7 @@ build_name: MALI-Test
 build_command: models/mali/cori_setup_tests.sh
 test_command: models/mali/run_test.sh
 cdash_section: MALI
-test_timeout: 8200
+test_timeout: 10600
 tests:
   - regsuite
   - echo,Circular_shelf_decomposition_test
