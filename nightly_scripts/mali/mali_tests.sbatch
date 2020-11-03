@@ -8,4 +8,4 @@ pyexe=/global/homes/m/mek/.conda/envs/pyctest/bin/python3
 test_dir=/global/homes/m/mek/dashboard
 pushd $test_dir || exit
 $pyexe worker.py profiles/test_mali_cori.yaml --site cori-knl -S
-$pyexe models/mali/summarise.py
+$pyexe summarise.py
