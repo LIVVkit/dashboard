@@ -91,6 +91,22 @@ def get_email_list(profile_name, settings_dir=None):
     return ", ".join(emails)
 
 
+def read_mali_case(case):
+    CaseInfo = namedtuple(typename="CaseInfo", field_names=["name", "passed", "time"])
+    with open(case, "r") as _fin:
+        case_data = _fin.read()
+    _passed = "PASS" in case_data and not "FAIL" in case_data
+
+    if "real " in case_data:
+        try:
+            _time = int(float(case_data[case_data.index("real ") :].split("\n")[0][5:]))
+        except TypeError:
+            _time = -86402 * 2
+    else:
+        _time = -86402
+    return CaseInfo(case.name, _passed, _time)
+
+
 def main(cl_args):
     """
     Assemble summary of testing and send email to interested folks.
@@ -101,26 +117,15 @@ def main(cl_args):
         Command line arguments
 
     """
-    scratch_root = os.environ["SCRATCH"]
+    scratch_root = os.environ["CSCRATCH"]
     in_dir = Path(scratch_root, "MPAS", "MALI_Test", "case_outputs")
     cases = sorted(in_dir.glob("*"))
     run_date = dt.datetime.utcfromtimestamp(cases[0].stat().st_ctime)
-    CaseInfo = namedtuple(typename="CaseInfo", field_names=["name", "passed", "time"])
+
     case_info = []
 
     for case in cases:
-        with open(case, "r") as _fin:
-            case_data = _fin.read()
-        _passed = "PASS" in case_data
-        if "real " in case_data:
-            try:
-                _time = float(case_data[case_data.index("real ") :].split("\n")[0][5:])
-            except TypeError:
-                _time = -86400 * 2
-        else:
-            _time = -86400
-
-        _info = CaseInfo(case.name, _passed, _time)
+        _info = read_mali_case(case)
         case_info.append(_info)
 
     passes = [_case for _case in case_info if _case.passed]
@@ -157,14 +162,17 @@ def main(cl_args):
     subject = f"[MALI Tests] {dt.datetime.now().strftime('%Y-%m-%d')}: {len(passes)} / {len(case_info)} passed"
 
     emails = get_email_list("mali")
-    mail_cmd = f"/usr/bin/mail -s '{subject}' '{emails}' -F 'Michael Kelleher' < txt_summary.txt"
+    out_file = Path(os.getcwd(), "txt_summary.txt")
+
+    mail_cmd = f"/usr/bin/mail -s '{subject}' '{emails}' -F 'Michael Kelleher' < {out_file}"
 
     if cl_args.send:
-        with open("txt_summary.txt", "w") as _fout:
+        with open(out_file, "w") as _fout:
             _fout.write(email_text)
 
         _frame = "x"
         print(f"{45 * _frame}\n{_frame}{'SENDING E-MAIL':^43s}{_frame}\n{45 * _frame}")
+        print(mail_cmd)
         os.system(mail_cmd)
 
     else:

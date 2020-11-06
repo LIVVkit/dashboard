@@ -41,4 +41,6 @@ $PY_EXE worker.py profiles/build_mali_cori.yaml --site cori-knl -S || exit
 # Now submit MALI Tests to queue
 popd
 pushd $SCRIPT_DIR || exit
-sbatch mali_tests.sbatch
+sbatch --wait mali_tests.sbatch
+pushd $TESTDIR || exit
+$PY_EXE summarise.py -S
