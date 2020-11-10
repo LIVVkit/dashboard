@@ -43,4 +43,4 @@ popd
 pushd $SCRIPT_DIR || exit
 sbatch --wait mali_tests.sbatch
 pushd $TESTDIR || exit
-$PY_EXE summarise.py -S
+$PY_EXE summarise.py -S -C
