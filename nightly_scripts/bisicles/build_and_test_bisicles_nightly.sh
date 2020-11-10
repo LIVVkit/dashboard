@@ -22,7 +22,7 @@ TESTDIR=/global/homes/m/mek/dashboard
 pushd $TESTDIR || exit
 $PY_EXE worker.py profiles/build_bisicles_cori.yaml --site cori-knl -S
 
-# Now submit MALI Tests to queue
+# Now submit BISICLES Tests to queue
 popd
 pushd $SCRIPT_DIR || exit
-sbatch bisicles_tests.sbatch
+sbatch --wait bisicles_tests.sbatch

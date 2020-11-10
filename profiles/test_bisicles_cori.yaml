@@ -5,10 +5,13 @@ test_command: models/bisicles/run_test.sh
 cdash_section: BISICLES
 test_timeout: 840
 tests:
-   - testAVCPoisson2d
-   - testFortranInterfaceIBC2d
-   - testCGOptimize2d
-   - testL1L22d
-   - testConstitutive2d
-   - testLevelSigmaCS2d
+   - twistyStream
+   - benchmark
+   - ASE-control
+#    - testAVCPoisson2d
+#    - testFortranInterfaceIBC2d
+#    - testCGOptimize2d
+#    - testL1L22d
+#    - testConstitutive2d
+#    - testLevelSigmaCS2d
 #    - inputs.test
