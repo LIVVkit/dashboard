@@ -84,7 +84,7 @@ def run(build_profile, pyctest_args):
         )
         if "config_opts" in build_profile:
             # Add options to select BISICLES / CHOMBO versions
-            pyctest.CONFIGURE_COMMAND += "{bisicles} {chombo}".format(
+            pyctest.CONFIGURE_COMMAND += " {bisicles} {chombo}".format(
                 **build_profile["config_opts"]
             )
 
@@ -99,7 +99,6 @@ def run(build_profile, pyctest_args):
         if "BISICLES" in pyctest.BUILD_NAME:
             _bis_build = os.readlink(f"{build_profile['source_directory']}/BISICLES").split("_")[-1][:-1]
             _cho_build = os.readlink(f"{build_profile['source_directory']}/Chombo").split("_")[-1][:-1]
-            breakpoint()
             pyctest.BUILD_NAME += f"_B{_bis_build[0].upper()}_C{_cho_build[0].upper()}"
         for test in build_profile["tests"]:
             test_runner = pyctest.test(properties={"TIMEOUT": f"{test_timeout:d}"})

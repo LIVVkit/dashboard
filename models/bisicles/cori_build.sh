@@ -1,5 +1,11 @@
 #!/usr/bin/env bash
-source $HOME/dashboard/nightly_scripts/bisicles_modules.sh
+if [ "$(readlink -- "BISICLES")" = "BISICLES_release" ]
+then
+    source $HOME/dashboard/nightly_scripts/bisicles_modules_old.sh
+else
+    source $HOME/dashboard/nightly_scripts/bisicles_modules.sh
+fi
+
 
 # pushd BISICLES/CISM-interface/exec2D || exit
 # pushd BISICLES/code/exec2D
