@@ -20,7 +20,16 @@ PY_EXE=/global/homes/m/mek/.conda/envs/pyctest/bin/python3
 TESTDIR=/global/homes/m/mek/dashboard
 
 pushd $TESTDIR || exit
-$PY_EXE worker.py profiles/build_bisicles_cori.yaml --site cori-knl -S
+$PY_EXE worker.py profiles/build_bisicles_rr_cori.yaml --site cori-knl -S
+
+# Now submit BISICLES Tests to queue
+popd
+pushd $SCRIPT_DIR || exit
+sbatch --wait bisicles_tests.sbatch
+
+popd
+pushd $TESTDIR || exit
+$PY_EXE worker.py profiles/build_bisicles_tt_cori.yaml --site cori-knl -S
 
 # Now submit BISICLES Tests to queue
 popd
