@@ -95,14 +95,8 @@ then
 
 elif [ $testname == "regsuite" ]
 then
-    # Check if yesterday's test was archived (may not happen if tests time out before archive step)
-    yesterday_arch=$TEST_ROOT/MPAS/MALI_`date --date="1 day ago" +"%Y-%m-%d"`
     TEST_DIR_RUN=$TEST_ROOT/MPAS/MALI_Test
     TEST_DIR_ARCH=$TEST_ROOT/MPAS/MALI_`date +"%Y-%m-%d"`
-
-    if [[ ! -d $yesterday_arch && -d $TEST_DIR_RUN ]]; then
-        cp -R $TEST_DIR_RUN $yesterday_arch
-    fi
 
     pushd $TEST_DIR_RUN || exit
     python combined_integration_test_suite.py || exit
