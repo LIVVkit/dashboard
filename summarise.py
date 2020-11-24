@@ -69,6 +69,8 @@ def get_repo_info():
         repo_info += (
             f"{spc}{'-' * (10 + len(str(git_repo.active_branch)) + len(repo))}\n"
         )
+        _remotes = "\n".join([i for i in git_repo.remote().urls])
+        repo_info += f"{spc}Tracked from: {_remotes}\n"
         repo_info += f"{spc}{latest.summary}\n"
         repo_info += (
             f"{spc}{latest.author}: {latest.authored_datetime.strftime('%d %b %Y')}\n\n"
