@@ -122,7 +122,7 @@ then
     # TEST_DIR_ARCH=$HOME/Data/MALI_Test/case_outputs
     cat $TEST_DIR/$casename || exit
 
-    if grep -E 'FAIL|Traceback' $TEST_DIR/$casename
+    if grep -E "FAIL|Traceback" $TEST_DIR/$casename >> /dev/null || ! grep -E "real\ " $TEST_DIR/$casename >> /dev/null
     then
         exit 1
     else
