@@ -29,3 +29,7 @@ $pyexe manage_regression_suite.py \
 --model_runtime $srunfile \
 --clean \
 --setup || exit
+
+# Make a copy of test suite XML in the test directory for later ref
+# Use a standard name so it can be referenced in summarise.py to send email
+cp landice/regression_suites/combined_integration_test_suite.xml $TESTDIR/regression.xml
