@@ -86,7 +86,7 @@ def move_files(test_info):
         _src = test_info["test_dir"]
         _dest = Path(*test_info["ref_dir"].parts[:-1])
         print(f"Copy {_src} to {_dest}")
-        subprocess.call(["cp", "-R", _src, _dest])
+        subprocess.call(["cp", "-LR", _src, _dest])
     else:
         print("Files remain unchanged")
 
