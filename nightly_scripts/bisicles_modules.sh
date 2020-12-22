@@ -7,7 +7,7 @@ module load craype-mic-knl
 module load cray-hdf5-parallel
 module load cray-netcdf-hdf5parallel
 module load visit
-module load python3/3.7-anaconda-2019.10
+# module load python3/3.7-anaconda-2019.10
 
 export PYTHON_DIR=$HOME/.conda/envs/pyctest
 export PETSC_DIR=/global/common/software/m1041/petsc_install/petsc_knl_intel
