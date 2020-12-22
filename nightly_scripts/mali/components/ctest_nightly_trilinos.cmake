@@ -159,6 +159,7 @@ if (BUILD_TRILINOS)
   "-DTrilinos_ENABLE_Pamgen:BOOL=ON"
   "-DTrilinos_ENABLE_Teko:BOOL=ON"
   "-DTrilinos_ENABLE_MiniTensor:BOOL=ON"
+  "-DTrilinos_ENABLE_PanzerDofMgr:BOOL=ON"
 #
   "-DTrilinos_ENABLE_TESTS:BOOL=OFF"
   "-DTrilinos_ENABLE_EXAMPLES:BOOL=OFF"

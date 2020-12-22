@@ -14,15 +14,21 @@ pushd $SCRIPT_DIR || exit
 # source $CTEST_CONFIG_DIR/bisicles_modules.sh >& modules.log
 # Build required components for MALI (no tests run on these)
 
-# Now perform BISICLES build
-printf "Build BISICLES\n"
 PY_EXE=/global/homes/m/mek/.conda/envs/pyctest/bin/python3
 TESTDIR=/global/homes/m/mek/dashboard
 
-pushd $TESTDIR || exit
-$PY_EXE worker.py profiles/build_bisicles_cori.yaml --site cori-knl -S
+for profile in rr tt rt tr
+do
+    # Now perform BISICLES build
+    printf "Build BISICLES $profile\n"
 
-# Now submit MALI Tests to queue
-popd
-pushd $SCRIPT_DIR || exit
-sbatch bisicles_tests.sbatch
+    pushd $TESTDIR || exit
+    $PY_EXE worker.py profiles/build_bisicles_${profile}_cori.yaml --site cori-knl -S
+
+    # Now submit BISICLES Tests to queue
+    popd
+    pushd $SCRIPT_DIR || exit
+    sbatch --wait bisicles_tests.sbatch
+    popd
+
+done

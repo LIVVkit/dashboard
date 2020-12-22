@@ -1,7 +1,10 @@
 source_directory: /global/cscratch1/sd/mek/bisicles/
 build_directory: /global/cscratch1/sd/mek/bisicles/
-build_name: BISICLES-Build
+build_name: BISICLES-Build_BT_CT
 configure_command: models/bisicles/cori_configure.sh
+config_opts:
+  chombo: trunk
+  bisicles: trunk
 build_command: models/bisicles/cori_build.sh
 # test_command: models/bisicles/run_test.sh
 cdash_section: BISICLES

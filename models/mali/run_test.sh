@@ -1,5 +1,6 @@
 #!/bin/bash
 testname=$1
+casename=$2
 # >>> conda initialize >>>
 # !! Contents within this block are managed by 'conda init' !!
 __conda_setup="$('/usr/common/software/python/3.7-anaconda-2019.07/bin/conda' 'shell.zsh' 'hook' 2> /dev/null)"
@@ -14,11 +15,13 @@ else
 fi
 unset __conda_setup
 # <<< conda initialize <<<
-TEST_ROOT=$SCRATCH
+TEST_ROOT=$CSCRATCH
+
 module load nco
 conda activate compass_py3.7
 MALI_TEST_RUN_DIR=$TEST_ROOT/MPAS/mali_test_run
 MALI_TEST_OUT_DIR=$HOME/MPAS/mali_test_output/test
+
 MALI_COMMIT=`cd $TEST_ROOT/MPAS/MPAS-Model && git log -p -1`
 echo "Hostname: "`hostname`
 
@@ -92,16 +95,9 @@ then
 
 elif [ $testname == "regsuite" ]
 then
-    # Check if yesterday's test was archived (may not happen if tests time out before archive step)
-    yesterday_arch=$CSCRATCH/MALI/MALI_`date --date="1 day ago" +"%Y-%m-%d"`
-    TEST_DIR_RUN=$CSCRATCH/MPAS/MALI_Test
-    TEST_DIR_ARCH=$CSCRATCH/MPAS/MALI_`date +"%Y-%m-%d"`
+    TEST_DIR_RUN=$TEST_ROOT/MPAS/MALI_Test
+    TEST_DIR_ARCH=$TEST_ROOT/MPAS/MALI_`date +"%Y-%m-%d"`
 
-    if [[ ! -d $yesterday_arch && -d $TEST_DIR_RUN ]]; then
-        cp -R $TEST_DIR_RUN $yesterday_arch
-    fi
-
-    mkdir -p $TEST_DIR_OUT
     pushd $TEST_DIR_RUN || exit
     python combined_integration_test_suite.py || exit
     cp -R $TEST_DIR_RUN $TEST_DIR_ARCH
@@ -118,17 +114,20 @@ then
     echo "LIVV Results available at: https://portal.nersc.gov/project/piscees/mek/vv_`date '+%Y_%m_%d'`"
 
 
-elif [[ $testname == echo_* ]]
+elif [[ $testname == "echo" ]]
 then
 
     # Echo test results as a test so the results are sent to CDASH separtely
-    IFS="_" read -ra split <<< "$testname"
-    case=("${split[@]:1}")
-    case=$(IFS=_ ; echo "${case[*]}")
+    TEST_DIR=$TEST_ROOT/MPAS/MALI_Test/case_outputs
+    # TEST_DIR_ARCH=$HOME/Data/MALI_Test/case_outputs
+    cat $TEST_DIR/$casename || exit
 
-    # TEST_DIR_ARCH=$CSCRATCH/MPAS/MALI_`date +"%Y-%m-%d"`/case_outputs
-    TEST_DIR_ARCH=$HOME/Data/MALI_Test/case_outputs
-    cat $TEST_DIR_ARCH/$case
+    if grep -E "FAIL|Traceback" $TEST_DIR/$casename >> /dev/null || ! grep -E "real\ " $TEST_DIR/$casename >> /dev/null
+    then
+        exit 1
+    else
+        exit 0
+    fi
 
 elif [ $testname == "hello_world" ]
 then

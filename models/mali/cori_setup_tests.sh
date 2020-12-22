@@ -1,6 +1,6 @@
 #!/bin/bash
 
-source $HOME/dashboard/nightly_scripts/mali_modules.sh
+source $HOME/dashboard/nightly_scripts/mali_modules.sh > modules.log
 module unload craype-hugepages2M
 module load darshan
 
@@ -19,6 +19,8 @@ pushd MPAS-Model/testing_and_setup/compass || exit
 # $pyexe setup_testcase.py -f $config --work_dir=$TESTDIR -m $srunfile -n 29
 
 # Setup regression suite
+rm -f $TESTDIR/case_outputs/*
+
 $pyexe manage_regression_suite.py \
 --test_suite landice/regression_suites/combined_integration_test_suite.xml \
 --baseline_dir $CSCRATCH/MPAS/MALI_Reference \
@@ -26,4 +28,8 @@ $pyexe manage_regression_suite.py \
 --work_dir $TESTDIR \
 --model_runtime $srunfile \
 --clean \
---setup
+--setup || exit
+
+# Make a copy of test suite XML in the test directory for later ref
+# Use a standard name so it can be referenced in summarise.py to send email
+cp landice/regression_suites/combined_integration_test_suite.xml $TESTDIR/regression.xml

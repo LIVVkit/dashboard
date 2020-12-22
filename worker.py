@@ -82,6 +82,12 @@ def run(build_profile, pyctest_args):
         pyctest.CONFIGURE_COMMAND = " ".join(
             ["bash", os.path.basename(build_profile["configure_command"])]
         )
+        if "config_opts" in build_profile:
+            # Add options to select BISICLES / CHOMBO versions
+            pyctest.CONFIGURE_COMMAND += " {bisicles} {chombo}".format(
+                **build_profile["config_opts"]
+            )
+
 
     if "build_command" in build_profile:
         pyctest.BUILD_COMMAND = " ".join(
@@ -89,11 +95,27 @@ def run(build_profile, pyctest_args):
         )
 
     if "tests" in build_profile:
+        # Check links to see where BISICLES and Chombo point to
+        if "BISICLES" in pyctest.BUILD_NAME:
+            _bis_build = os.readlink(f"{build_profile['source_directory']}/BISICLES").split("_")[-1][:-1]
+            _cho_build = os.readlink(f"{build_profile['source_directory']}/Chombo").split("_")[-1][:-1]
+            pyctest.BUILD_NAME += f"_B{_bis_build[0].upper()}_C{_cho_build[0].upper()}"
         for test in build_profile["tests"]:
             test_runner = pyctest.test(properties={"TIMEOUT": f"{test_timeout:d}"})
-            test_runner.SetName(test)
+
+            # Echo tests are comma separated so two arguments are passed to the
+            # bash script to avoid bash having to do string processing
+            # the test will be in the yaml file as (e.g.: echo,Dome_restart_test)
+            # and the test `name` would be echo_Dome_restart_test to match the old style
+            # If there's no comma in the test name, the split/re-join doesn't have any effect
+            test_runner.SetName("_".join(test.split(",")))
+
             test_runner.SetCommand(
-                ["bash", os.path.basename(build_profile["test_command"]), test]
+                [
+                    "bash",
+                    os.path.basename(build_profile["test_command"]),
+                    *test.split(","),
+                ]
             )
             test_runner.SetProperty("WORKING_DIRECTORY", pyctest.BINARY_DIRECTORY)
     pyctest.run(pyctest.ARGUMENTS)
