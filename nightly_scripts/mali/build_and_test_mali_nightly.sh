@@ -37,7 +37,12 @@ PY_EXE=/global/homes/m/mek/.conda/envs/pyctest/bin/python3
 DASH_DIR=/global/homes/m/mek/dashboard
 
 pushd $DASH_DIR || exit
-$PY_EXE worker.py profiles/build_mali_cori.yaml --site cori-knl -S || exit
+if [ ${CTEST_DO_SUBMIT} == "ON" ]
+then
+    $PY_EXE worker.py profiles/build_mali_cori.yaml --site cori-knl -S || exit
+else
+    $PY_EXE worker.py profiles/build_mali_cori.yaml --site cori-knl || exit
+fi
 
 # Now submit MALI Tests to queue
 popd
@@ -45,7 +50,12 @@ pushd $NIGHTLY_SCRIPT_DIR || exit
 sbatch --wait mali_tests.sbatch
 pushd $DASH_DIR || exit
 
-$PY_EXE summarise.py -S -C
+if [ ${CTEST_DO_SUBMIT} == "ON" ]
+then
+    $PY_EXE summarise.py -S -C
+else
+    $PY_EXE summarise.py
+fi
 
 # Archive the regression suite
 TEST_DIR_RUN=$TEST_ROOT/MPAS/MALI_Test
