@@ -1,11 +1,11 @@
 #!/bin/bash
 
 if [[ -z "${BASE_DIR}" ]]; then
-    BASE_DIR=${HOME}/MPAS/Components
+    BASE_DIR=${CSCRATCH}/MPAS/Components
 fi
 
 if [[ -z "${EXE_DIR}" ]]; then
-    EXE_DIR=${HOME}/MPAS/Components
+    EXE_DIR=${CSCRATCH}/MPAS/Components
 fi
 
 if [[ -z "${CMAKE_SCRIPTS}" ]]; then

@@ -4,8 +4,8 @@
 # Setup modules and environment variables
 export TEST_ROOT=$CSCRATCH
 export NIGHTLY_SCRIPT_DIR=/global/homes/m/mek/dashboard/nightly_scripts/mali
-export BASE_DIR=/global/homes/m/mek/MPAS/Components
-export EXE_DIR=/global/homes/m/mek/MPAS/Components
+export BASE_DIR=$TEST_ROOT/MPAS/Components
+export EXE_DIR=$TEST_ROOT/MPAS/Components
 export CTEST_DO_SUBMIT=ON
 export CTEST_CONFIG_DIR=$HOME/dashboard/nightly_scripts/
 

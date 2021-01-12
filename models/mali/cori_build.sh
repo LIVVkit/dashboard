@@ -6,8 +6,8 @@ module unload craype-hugepages2M
 module load darshan
 
 # note this version has no netcdf support
-export PIO=$HOME/MPAS/Components/build/PIOInstall
-source $HOME/MPAS/Components/build/AlbanyInstall/export_albany.in
+export PIO=$CSCRATCH/MPAS/Components/build/PIOInstall
+source $CSCRATCH/MPAS/Components/build/AlbanyInstall/export_albany.in
 
 export CRAYPE_LINK_TYPE=STATIC
 MPAS_EXTERNAL_LIBS="$ALBANY_LINK_LIBS -lstdc++"
@@ -21,3 +21,5 @@ PIO=$PIO \
 MPAS_EXTERNAL_LIBS="$MPAS_EXTERNAL_LIBS" \
 DEBUG=true \
 EXE_NAME=landice_model || exit 1
+
+chgrp -R piscees .
