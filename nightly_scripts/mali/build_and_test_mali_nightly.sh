@@ -53,3 +53,15 @@ TEST_DIR_ARCH=$TEST_ROOT/MPAS/MALI_`date +"%Y-%m-%d"`
 cp -R $TEST_DIR_RUN $TEST_DIR_ARCH
 
 chgrp -R piscees $CSCRATCH/MPAS
+
+REF_DIR=$TEST_ROOT/MPAS/MALI_Reference/landice
+OUTDIR=/project/projectdirs/piscees/www/mek/vv_`date '+%Y_%m_%d'`
+LATEST_LINK=/project/projectdirs/piscees/www/mek/latest
+$HOME/.conda/envs/livv/bin/livv -v $TEST_DIR_ARCH/landice $REF_DIR -o $OUTDIR -p 32 || exit
+chmod -R 0755 $OUTDIR
+rm -f $LATEST_LINK
+ln -sf $OUTDIR $LATEST_LINK
+chmod -R 0755 $LATEST_LINK
+
+echo "Results available at: https://portal.nersc.gov/project/piscees/mek/index.html"
+echo "LIVV Results available at: https://portal.nersc.gov/project/piscees/mek/vv_`date '+%Y_%m_%d'`"
