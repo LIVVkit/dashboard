@@ -73,6 +73,7 @@ def get_repo_info():
         "Albany": Path(_component_root, "Albany"),
         "PIO": Path(_component_root, "PIO"),
         "Trilinos": Path(_component_root, "Trilinos"),
+        "COMPASS": Path(os.environ["CSCRATCH"], "MPAS", "compass"),
         "MALI": Path(os.environ["CSCRATCH"], "MPAS", "MPAS-Model"),
     }
     repo_info = "\n\n>>>>>> Source Repositories <<<<<<\n"
