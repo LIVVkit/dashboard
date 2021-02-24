@@ -67,12 +67,13 @@ def get_unrun_cases(case_dir):
 
 def get_repo_info():
     """Get repository info for components and MALI."""
-    _component_root = Path(os.environ["HOME"], "MPAS", "Components", "src")
+    _component_root = Path(os.environ["CSCRATCH"], "MPAS", "Components", "src")
 
     repo_locs = {
         "Albany": Path(_component_root, "Albany"),
         "PIO": Path(_component_root, "PIO"),
         "Trilinos": Path(_component_root, "Trilinos"),
+        "COMPASS": Path(os.environ["CSCRATCH"], "MPAS", "compass"),
         "MALI": Path(os.environ["CSCRATCH"], "MPAS", "MPAS-Model"),
     }
     repo_info = "\n\n>>>>>> Source Repositories <<<<<<\n"

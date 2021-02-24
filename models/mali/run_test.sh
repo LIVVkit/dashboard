@@ -104,8 +104,9 @@ then
 
 elif [ $testname == "livv" ]
 then
-    TEST_DIR=$HOME/MPAS/mali_test_output/test/MALI/
-    REF_DIR=$HOME/MPAS/mali_test_output/reference/MALI/
+
+    TEST_DIR=$TEST_ROOT/MPAS/MALI_`date +"%Y-%m-%d"`/landice
+    REF_DIR=$TEST_ROOT/MPAS/MALI_Reference/landice
     OUTDIR=/project/projectdirs/piscees/www/mek/vv_`date '+%Y_%m_%d'`
     livv -v $TEST_DIR $REF_DIR -o $OUTDIR || exit
     chmod -R 0755 $OUTDIR

@@ -4,8 +4,8 @@
 # Setup modules and environment variables
 export TEST_ROOT=$CSCRATCH
 export NIGHTLY_SCRIPT_DIR=/global/homes/m/mek/dashboard/nightly_scripts/mali
-export BASE_DIR=/global/homes/m/mek/MPAS/Components
-export EXE_DIR=/global/homes/m/mek/MPAS/Components
+export BASE_DIR=$TEST_ROOT/MPAS/Components
+export EXE_DIR=$TEST_ROOT/MPAS/Components
 export CTEST_DO_SUBMIT=ON
 export CTEST_CONFIG_DIR=$HOME/dashboard/nightly_scripts/
 
@@ -37,7 +37,12 @@ PY_EXE=/global/homes/m/mek/.conda/envs/pyctest/bin/python3
 DASH_DIR=/global/homes/m/mek/dashboard
 
 pushd $DASH_DIR || exit
-$PY_EXE worker.py profiles/build_mali_cori.yaml --site cori-knl -S || exit
+if [ ${CTEST_DO_SUBMIT} == "ON" ]
+then
+    $PY_EXE worker.py profiles/build_mali_cori.yaml --site cori-knl -S || exit
+else
+    $PY_EXE worker.py profiles/build_mali_cori.yaml --site cori-knl || exit
+fi
 
 # Now submit MALI Tests to queue
 popd
@@ -45,7 +50,12 @@ pushd $NIGHTLY_SCRIPT_DIR || exit
 sbatch --wait mali_tests.sbatch
 pushd $DASH_DIR || exit
 
-$PY_EXE summarise.py -S -C
+if [ ${CTEST_DO_SUBMIT} == "ON" ]
+then
+    $PY_EXE summarise.py -S -C
+else
+    $PY_EXE summarise.py
+fi
 
 # Archive the regression suite
 TEST_DIR_RUN=$TEST_ROOT/MPAS/MALI_Test
@@ -53,3 +63,15 @@ TEST_DIR_ARCH=$TEST_ROOT/MPAS/MALI_`date +"%Y-%m-%d"`
 cp -R $TEST_DIR_RUN $TEST_DIR_ARCH
 
 chgrp -R piscees $CSCRATCH/MPAS
+
+REF_DIR=$TEST_ROOT/MPAS/MALI_Reference/landice
+OUTDIR=/project/projectdirs/piscees/www/mek/vv_`date '+%Y_%m_%d'`
+LATEST_LINK=/project/projectdirs/piscees/www/mek/latest
+$HOME/.conda/envs/livv/bin/livv -v $TEST_DIR_ARCH/landice $REF_DIR -o $OUTDIR -p 32 || exit
+chmod -R 0755 $OUTDIR
+rm -f $LATEST_LINK
+ln -sf $OUTDIR $LATEST_LINK
+chmod -R 0755 $LATEST_LINK
+
+echo "Results available at: https://portal.nersc.gov/project/piscees/mek/index.html"
+echo "LIVV Results available at: https://portal.nersc.gov/project/piscees/mek/vv_`date '+%Y_%m_%d'`"

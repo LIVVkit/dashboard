@@ -7,3 +7,11 @@ pushd MPAS-Model || exit
 git clean -fx
 git pull --ff-only
 popd || exit
+
+if [ ! -d compass ]; then
+    git clone https://github.com/MPAS-Dev/compass.git
+fi
+pushd compass || exit
+git clean -fx
+git pull --ff-only
+popd || exit
