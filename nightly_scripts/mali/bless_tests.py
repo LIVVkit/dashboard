@@ -24,7 +24,11 @@ def args():
         "-n",
         "--test_name",
         required=True,
-        help="Name of test to be updated (e.g. dome_restart_test)",
+        help=(
+            "Name of test to be updated (e.g. dome_restart_test)\n"
+            "This can also be a comma separated list of tests from the same run\n"
+            "(e.g. HO_GIS_restart_test,HO_dome_decomposition_test"
+        ),
     )
 
     return parser.parse_args()
@@ -103,7 +107,6 @@ def move_files(test_info):
 
 def main(cl_args):
     """Define stuff."""
-
     cscratch = os.environ["CSCRATCH"]
     core = "landice"
     regsuite_file = Path(
@@ -120,8 +123,13 @@ def main(cl_args):
     tests = regsuite.getElementsByTagName("test")
     ref_root = Path(cscratch, "MPAS", "MALI_Reference")
     new_ref = Path(cscratch, "MPAS", f"MALI_{cl_args.test_date}")
-    test_info = get_test_info(tests, ref_root, new_ref, cl_args.test_name)
-    move_files(test_info)
+
+    test_names = cl_args.test_name.split(",")
+    for test_name in test_names:
+        test_name = test_name.strip()
+        print(f"------BLESSING: {test_name}------")
+        test_info = get_test_info(tests, ref_root, new_ref, test_name)
+        move_files(test_info)
 
 
 if __name__ == "__main__":
