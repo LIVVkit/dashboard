@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# COMPASS_DIR=$CSCRATCH/MPAS/compass
+COMPASS_DIR=$CSCRATCH/MPAS/MPAS-Model/testing_and_setup/compass
+
 source $HOME/dashboard/nightly_scripts/mali_modules.sh > modules.log
 module unload craype-hugepages2M
 module load darshan
@@ -7,10 +10,10 @@ module load darshan
 TESTDIR=$CSCRATCH/MPAS/MALI_Test
 pyexe=$HOME/.conda/envs/compass_py3.7/bin/python
 config=$TESTDIR/general.config.landice
-# srunfile=$TESTDIR/srun.xml
-srunfile=$CSCRATCH/MPAS/compass/runtime_definitions/srun.xml
 
-pushd compass || exit
+srunfile=$COMPASS_DIR/runtime_definitions/srun.xml
+
+pushd $COMPASS_DIR || exit
 # Individual test setup
 # $pyexe setup_testcase.py -f $config --work_dir=$TESTDIR -m $srunfile -n 22
 # $pyexe setup_testcase.py -f $config --work_dir=$TESTDIR -m $srunfile -n 23

@@ -20,6 +20,6 @@ CORE=$CORE \
 PIO=$PIO \
 MPAS_EXTERNAL_LIBS="$MPAS_EXTERNAL_LIBS" \
 DEBUG=true \
-EXE_NAME=landice_model || exit 1
+EXE_NAME=landice_model || exit
 
 chgrp -R piscees .
