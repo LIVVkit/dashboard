@@ -12,11 +12,12 @@ export CTEST_DO_SUBMIT=ON
 pushd $SCRIPT_DIR || exit
 
 # source $CTEST_CONFIG_DIR/bisicles_modules.sh >& modules.log
-# Build required components for MALI (no tests run on these)
+# Build required components for BISICLES (no tests run on these)
 
 PY_EXE=/global/homes/m/mek/.conda/envs/pyctest/bin/python3
 TESTDIR=/global/homes/m/mek/dashboard
 
+# Chombo, BISICLES order (e.g. rt is Chombo Release BISICLES Trunk)
 for profile in rr tt rt tr
 do
     # Now perform BISICLES build
