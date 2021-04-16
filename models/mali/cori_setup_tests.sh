@@ -1,7 +1,8 @@
 #!/bin/bash
 
 # COMPASS_DIR=$CSCRATCH/MPAS/compass
-COMPASS_DIR=$CSCRATCH/MPAS/MPAS-Model/testing_and_setup/compass
+# COMPASS_DIR=$CSCRATCH/MPAS/MPAS-Model/testing_and_setup/compass
+COMPASS_DIR=$CSCRATCH/MPAS/compass/MPAS-Model/landice/develop/testing_and_setup/compass
 
 source $HOME/dashboard/nightly_scripts/mali_modules.sh > modules.log
 module unload craype-hugepages2M
