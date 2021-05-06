@@ -1,6 +1,12 @@
 #!/bin/bash
 # This is run on cori04 nightly
 
+# Setup conda
+export CONDA_ENV=/global/common/software/piscees/mali/conda/pyctest
+export PY_EXE=${CONDA_ENV}/bin/python3
+source /usr/common/software/python/3.8-anaconda-2020.11/etc/profile.d/conda.sh
+conda activate $CONDA_ENV
+
 # Setup modules and environment variables
 export TEST_ROOT=$CSCRATCH
 export NIGHTLY_SCRIPT_DIR=/global/homes/m/mek/dashboard/nightly_scripts/mali
@@ -11,11 +17,9 @@ export CTEST_CONFIG_DIR=$HOME/dashboard/nightly_scripts/
 
 pushd $NIGHTLY_SCRIPT_DIR || exit
 
-# source /global/homes/m/mperego/cori_modules.sh >& modules.log
 source $CTEST_CONFIG_DIR/mali_modules.sh >& modules.log
 module unload craype-hugepages2M
 module load darshan
-
 export CRAYPE_LINK_TYPE=STATIC
 
 printf "CLEAN UP \n$BASE_DIR/build\n$BASE_DIR/src\n"
@@ -33,7 +37,6 @@ bash ${NIGHTLY_SCRIPT_DIR}/components/cron_script_pio_cori.sh
 
 # Now perform MALI build
 printf "Build MALI\n"
-PY_EXE=/global/homes/m/mek/.conda/envs/pyctest/bin/python3
 DASH_DIR=/global/homes/m/mek/dashboard
 
 pushd $DASH_DIR || exit

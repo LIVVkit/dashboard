@@ -1,6 +1,6 @@
 #!/bin/bash
 #SBATCH --qos=regular
-#SBATCH --time=180
+#SBATCH --time=130
 #SBATCH --nodes=1
 #SBATCH --constraint=knl
 echo "SUBMIT? ${CTEST_DO_SUBMIT}"
