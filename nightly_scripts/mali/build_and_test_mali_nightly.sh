@@ -55,14 +55,19 @@ pushd $DASH_DIR || exit
 
 if [ ${CTEST_DO_SUBMIT} == "ON" ]
 then
-    $PY_EXE summarise.py -S -C
+    $PY_EXE summarise.py --model mali -S -C
 else
-    $PY_EXE summarise.py
+    $PY_EXE summarise.py --model mali
 fi
 
 # Archive the regression suite
 TEST_DIR_RUN=$TEST_ROOT/MPAS/MALI_Test
 TEST_DIR_ARCH=$TEST_ROOT/MPAS/MALI_`date +"%Y-%m-%d"`
+
+# Make a backup copy of an already existing archive. Why this happens? Dunno yet.
+if [ -e $TEST_DIR_ARCH ];then
+    mv $TEST_DIR_ARCH ${TEST_DIR_ARCH}_`date +"%s"`
+fi
 cp -R $TEST_DIR_RUN $TEST_DIR_ARCH
 
 chgrp -R piscees $CSCRATCH/MPAS

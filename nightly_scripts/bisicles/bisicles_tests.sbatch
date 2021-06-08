@@ -1,6 +1,6 @@
 #!/bin/bash
 #SBATCH --qos=regular
-#SBATCH --time=5
+#SBATCH --time=2
 #SBATCH --nodes=1
 #SBATCH --constraint=knl
 
