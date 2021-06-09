@@ -11,7 +11,11 @@ then
     CH_BUILD="release"
 fi
 
-source $HOME/dashboard/nightly_scripts/bisicles_modules.sh
+if [ BIS_BUILD == "release" ];then
+    source $HOME/dashboard/nightly_scripts/bisicles_modules_old.sh
+else
+    source $HOME/dashboard/nightly_scripts/bisicles_modules.sh
+fi
 export BISICLES_HOME=$CSCRATCH/bisicles
 cd $BISICLES_HOME
 rm -f Chombo BISICLES
@@ -20,8 +24,8 @@ ln -sf Chombo_${CH_BUILD} Chombo
 ln -sf BISICLES_${BIS_BUILD} BISICLES
 
 pushd Chombo || exit
-svn cleanup . --remove-unversioned
-svn up
+svn cleanup && svn cleanup . --remove-unversioned || exit
+svn up || exit
 pushd lib/mk || exit
 if [ $BIS_BUILD = "release" ]
 then
@@ -34,6 +38,6 @@ fi
 popd && popd || exit
 
 pushd BISICLES || exit
-svn cleanup . --remove-unversioned
+svn cleanup && svn cleanup . --remove-unversioned || exit
 svn up
 popd || exit

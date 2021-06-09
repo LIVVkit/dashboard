@@ -19,6 +19,7 @@ TESTDIR=/global/homes/m/mek/dashboard
 
 # Chombo, BISICLES order (e.g. rt is Chombo Release BISICLES Trunk)
 for profile in rr tt rt tr
+# for profile in tt
 do
     # Now perform BISICLES build
     printf "Build BISICLES $profile\n"
@@ -42,8 +43,8 @@ do
 done
 
 pushd $TESTDIR
-if [ $CTEST_DO_SUBMIT == "ON" ];then
-    $pyexe summarise.py --model bisicles -S -C
+if [ $CTEST_DO_SUBMIT == "ON" ]; then
+    $PY_EXE summarise.py --model bisicles -S -C
 else
-    $pyexe summarise.py --model bisicles
+    $PY_EXE summarise.py --model bisicles
 fi

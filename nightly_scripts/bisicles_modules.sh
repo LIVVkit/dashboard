@@ -1,4 +1,6 @@
 export NERSC_HOST=`/usr/common/usg/bin/nersc_host`
+source /usr/common/software/python/3.8-anaconda-2020.11/etc/profile.d/conda.sh
+conda deactivate
 
 module unload PrgEnv-gnu
 module unload craype-haswell
