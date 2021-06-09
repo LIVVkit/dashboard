@@ -1,9 +1,13 @@
 #!/usr/bin/env bash
-if [ ! -d  MPAS-Model ]; then
-    git clone -b landice/develop git@github.com:MPAS-Dev/MPAS-Model.git || exit
+# if [ ! -d  MPAS-Model ]; then
+#     git clone -b landice/develop git@github.com:MPAS-Dev/MPAS-Model.git || exit
+# fi
+export MODEL_ROOT=E3SM
+if [ ! -d $MODEL_ROOT ]; then
+    git clone -b develop git@github.com:MALI-Dev/E3SM.git
 fi
 
-pushd MPAS-Model || exit
+pushd $MODEL_ROOT || exit
 git clean -fx || exit
 git pull --ff-only || exit
 popd || exit
