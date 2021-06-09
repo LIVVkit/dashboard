@@ -161,8 +161,9 @@ def mali():
 
     """
     scratch_root = os.environ["CSCRATCH"]
-    # in_dir = Path(scratch_root, "MPAS", "MALI_Test", "case_outputs")
-    in_dir = Path(scratch_root, "MPAS", "MALI_2021-05-19", "case_outputs")
+    in_dir = Path(scratch_root, "MPAS", "MALI_Test", "case_outputs")
+    # Debug testing example
+    # in_dir = Path(scratch_root, "MPAS", "MALI_2021-05-19", "case_outputs")
     cases = sorted(in_dir.glob("*"))
     run_date = dt.datetime.utcfromtimestamp(cases[0].stat().st_ctime)
 
@@ -266,7 +267,12 @@ def bisicles_repo(bisicles_dir):
         for vers in ["release", "trunk"]:
             repo_dir = Path(bisicles_dir, f"{sftwr}_{vers}")
             client = svnl.LocalClient(repo_dir)
-            info = client.info()
+            try:
+                info = client.info()
+            except ET.ParseError:
+                output += "#### XML PARSE ERROR ####\n"
+                continue
+
             # Make sure there aren't newer entries in the log...svn is weird?
             log = list(client.log_default(revision_from=info["commit_revision"]))
             latest = log[-1]

@@ -88,7 +88,6 @@ def run(build_profile, pyctest_args):
                 **build_profile["config_opts"]
             )
 
-
     if "build_command" in build_profile:
         pyctest.BUILD_COMMAND = " ".join(
             ["bash", os.path.basename(build_profile["build_command"])]
@@ -97,8 +96,12 @@ def run(build_profile, pyctest_args):
     if "tests" in build_profile:
         # Check links to see where BISICLES and Chombo point to
         if "BISICLES" in pyctest.BUILD_NAME:
-            _bis_build = os.readlink(f"{build_profile['source_directory']}/BISICLES").split("_")[-1][:-1]
-            _cho_build = os.readlink(f"{build_profile['source_directory']}/Chombo").split("_")[-1][:-1]
+            _bis_build = os.readlink(
+                f"{build_profile['source_directory']}/BISICLES"
+            ).split("_")[-1][:-1]
+            _cho_build = os.readlink(
+                f"{build_profile['source_directory']}/Chombo"
+            ).split("_")[-1][:-1]
             pyctest.BUILD_NAME += f"_B{_bis_build[0].upper()}_C{_cho_build[0].upper()}"
         for test in build_profile["tests"]:
             test_runner = pyctest.test(properties={"TIMEOUT": f"{test_timeout:d}"})
