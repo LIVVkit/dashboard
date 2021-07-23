@@ -3,11 +3,11 @@ build_directory: /global/cscratch1/sd/mek/bisicles/
 build_name: BISICLES-Test
 test_command: models/bisicles/run_test.sh
 cdash_section: BISICLES
-test_timeout: 840
+test_timeout: 640
 tests:
-   - twistyStream
-   - benchmark
-   - ASE-control
+  - twistyStream
+  - benchmark
+  - ASE-control
 #    - testAVCPoisson2d
 #    - testFortranInterfaceIBC2d
 #    - testCGOptimize2d

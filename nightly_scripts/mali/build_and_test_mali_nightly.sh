@@ -8,12 +8,22 @@ source /usr/common/software/python/3.8-anaconda-2020.11/etc/profile.d/conda.sh
 conda activate $CONDA_ENV
 
 # Setup modules and environment variables
-export TEST_ROOT=$CSCRATCH
+export TEST_ROOT=$CSCRATCH/MPAS
 export NIGHTLY_SCRIPT_DIR=/global/homes/m/mek/dashboard/nightly_scripts/mali
-export BASE_DIR=$TEST_ROOT/MPAS/Components
-export EXE_DIR=$TEST_ROOT/MPAS/Components
+export BASE_DIR=$TEST_ROOT/Components
+export EXE_DIR=$TEST_ROOT/Components
 export CTEST_DO_SUBMIT=ON
 export CTEST_CONFIG_DIR=$HOME/dashboard/nightly_scripts/
+export DASH_DIR=/global/homes/m/mek/dashboard
+
+# Testing directories for New COMPASS
+BASE_DIR_NEW=$TEST_ROOT/NewTests/MALI_Reference
+TEST_DIR_RUN_NEW=$TEST_ROOT/NewTests/MALI_Test
+TEST_DIR_ARCH_NEW=$TEST_ROOT/NewTests/MALI_`date +"%Y-%m-%d"`
+
+# Testing directories for Old COMPASS
+TEST_DIR_RUN=$TEST_ROOT/MALI_Test
+TEST_DIR_ARCH=$TEST_ROOT/MALI_`date +"%Y-%m-%d"`
 
 pushd $NIGHTLY_SCRIPT_DIR || exit
 
@@ -37,7 +47,6 @@ bash ${NIGHTLY_SCRIPT_DIR}/components/cron_script_pio_cori.sh
 
 # Now perform MALI build
 printf "Build MALI\n"
-DASH_DIR=/global/homes/m/mek/dashboard
 
 pushd $DASH_DIR || exit
 if [ ${CTEST_DO_SUBMIT} == "ON" ]
@@ -47,32 +56,69 @@ else
     $PY_EXE worker.py profiles/build_mali_cori.yaml --site cori-knl || exit
 fi
 
+# Setup new COMPASS tests
+pushd $TEST_ROOT/compass
+COMPASS_ENV=dev_compass_1.0.0
+if [ -d $CSCRATCH/.conda/envs/$COMPASS_ENV ]; then
+    # Remove old compass env if it exists already (conflicts happened once)
+    # when updating...caused environment solving to hang
+    $CSCRATCH/.conda/bin/conda env remove -n $COMPASS_ENV
+fi
+./conda/configure_compass_env.py --conda $CSCRATCH/.conda -c intel -m cori-knl
+
+# Load conda environment
+source $TEST_ROOT/compass/load_dev_compass_1.0.0_cori-knl_intel_impi.sh
+
+# Temporary install so summary e-mails can be sent by this environment
+conda install -c conda-forge gitpython svn ruamel.yaml -y
+pip install svn pysvn
+
+# Clean up old logs
+rm -f $TEST_DIR_RUN_NEW/case_outputs/*.log
+
+compass suite \
+--core landice \
+--test_suite full_integration \
+--setup \
+--machine cori-knl \
+--work_dir $TEST_DIR_RUN_NEW \
+--baseline_dir $BASE_DIR_NEW \
+--mpas_model $TEST_ROOT/E3SM/components/mpas-albany-landice \
+--clean || exit
+
 # Now submit MALI Tests to queue
 popd
 pushd $NIGHTLY_SCRIPT_DIR || exit
+sbatch --wait mali_tests_new.sbatch
 sbatch --wait mali_tests.sbatch
 pushd $DASH_DIR || exit
 
 if [ ${CTEST_DO_SUBMIT} == "ON" ]
 then
-    $PY_EXE summarise.py --model mali -S -C
+    $CONDA_PREFIX/bin/python summarise.py --model mali -S -C
+    $CONDA_PREFIX/bin/python summarise.py --model newmali -S -C
 else
-    $PY_EXE summarise.py --model mali
+    $CONDA_PREFIX/bin/python summarise.py --model mali
+    $CONDA_PREFIX/bin/python summarise.py --model newmali
 fi
 
-# Archive the regression suite
-TEST_DIR_RUN=$TEST_ROOT/MPAS/MALI_Test
-TEST_DIR_ARCH=$TEST_ROOT/MPAS/MALI_`date +"%Y-%m-%d"`
-
+# Archive the OLD regression suite
 # Make a backup copy of an already existing archive. Why this happens? Dunno yet.
 if [ -e $TEST_DIR_ARCH ];then
     mv $TEST_DIR_ARCH ${TEST_DIR_ARCH}_`date +"%s"`
 fi
 cp -R $TEST_DIR_RUN $TEST_DIR_ARCH
 
+# Archive the NEW regression suite
+# Make a backup copy of an already existing archive. Why this happens? Dunno yet.
+if [ -e $TEST_DIR_ARCH_NEW ];then
+    mv $TEST_DIR_ARCH_NEW ${TEST_DIR_ARCH_NEW}_`date +"%s"`
+fi
+cp -R $TEST_DIR_RUN_NEW $TEST_DIR_ARCH_NEW
+
 chgrp -R piscees $CSCRATCH/MPAS
 
-REF_DIR=$TEST_ROOT/MPAS/MALI_Reference/landice
+REF_DIR=$TEST_ROOT/MALI_Reference/landice
 OUTDIR=/project/projectdirs/piscees/www/mek/vv_`date '+%Y_%m_%d'`
 LATEST_LINK=/project/projectdirs/piscees/www/mek/latest
 $HOME/.conda/envs/livv/bin/livv -v $TEST_DIR_ARCH/landice $REF_DIR -o $OUTDIR -p 32 || exit

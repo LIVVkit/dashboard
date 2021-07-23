@@ -5,6 +5,8 @@
 import argparse
 import datetime as dt
 import os
+import pickle as pk
+import re
 import xml.etree.ElementTree as ET
 from collections import OrderedDict, namedtuple
 from pathlib import Path
@@ -35,7 +37,9 @@ def args():
         help="A YAML file describing the build profile to summarise",
     )
 
-    parser.add_argument("-m", "--model", help="Model profile (mali or bisicles)")
+    parser.add_argument(
+        "-m", "--model", help="Model profile (mali, newmali or bisicles)"
+    )
 
     parser.add_argument(
         "-S",
@@ -80,7 +84,8 @@ def get_repo_info():
         "PIO": Path(_component_root, "PIO"),
         "Trilinos": Path(_component_root, "Trilinos"),
         "COMPASS": Path(os.environ["CSCRATCH"], "MPAS", "compass"),
-        "MALI": Path(os.environ["CSCRATCH"], "MPAS", "MPAS-Model"),
+        # "MALI": Path(os.environ["CSCRATCH"], "MPAS", "MPAS-Model"),
+        "MALI": Path(os.environ["CSCRATCH"], "MPAS", "E3SM"),
     }
     repo_info = "\n\n>>>>>> Source Repositories <<<<<<\n"
     spc = "      "
@@ -215,6 +220,91 @@ def mali():
     return subject, email_text
 
 
+def parse_new_compass_log(log):
+    time, status, name = log
+    mins, secs = time.split(":")
+    out_time = dt.timedelta(seconds=(int(mins) * 60 + int(secs)))
+    passed = status == "PASS"
+    return out_time, passed, name
+
+
+def new_mali_compass(suite_name):
+    in_dir = Path("/global/cscratch1/sd/mek/MPAS/NewTests/MALI_Test")
+    test_def = Path(in_dir, f"{suite_name}.pickle")
+    log_file = Path(in_dir, f"{suite_name}.log")
+    run_date = dt.datetime.utcfromtimestamp(log_file.stat().st_ctime)
+    with open(test_def, "rb") as _fin:
+        suite = pk.load(_fin)
+
+    case_canon = [
+        case.replace("/", "_") for case in sorted(list(suite["test_cases"].keys()))
+    ]
+
+    with open(log_file, "r") as _fin:
+        logs = _fin.readlines()
+
+    times_s = logs.index("Test Runtimes:\n")
+    times_e = ["Total runtime" in _line for _line in logs].index(True)
+    time_logs = logs[times_s + 1 : times_e]
+
+    # Remove ANSI terminal colour escape chars
+    esc_chars = re.compile(r"\x1B(?:[@-Z\\-_]|\[[0-?]*[ -/]*[@-~])")
+    time_logs = [esc_chars.sub("", _line).strip().split(" ") for _line in time_logs]
+    info = {}
+    for line in time_logs:
+        _time, _pass, _name = parse_new_compass_log(line)
+        info[_name] = {"time": _time, "passed": _pass}
+
+    total_time_case = dt.timedelta(0)
+    for _case in info:
+        total_time_case += info[_case]["time"]
+
+    test_fails = []
+    test_passes = []
+
+    for case in info:
+        if info[case]["passed"]:
+            test_passes.append(case)
+        else:
+            test_fails.append(case)
+
+    cases_not_run = set(info.keys()).symmetric_difference(case_canon)
+    if cases_not_run:
+        for case in cases_not_run:
+            info[case] = {"time": dt.timedelta(seconds=2 * FAILED_TO_RUN), "passed": False}
+        test_fails.extend(list(cases_not_run))
+
+    header_text = "\n>>>>>> TESTS {} <<<<<<\n"
+    email_text = f"{HLINE}\n|\/| /|| |\n|  |/-||_|\n{HLINE}\n"
+    email_text += f"{'Run on':^10s}\n{run_date.strftime('%Y-%m-%d')}\n{HLINE}\n"
+    email_text += f"Tests Run: {len(test_passes) + len(test_fails)}\n"
+    email_text += (
+        f"{'Passed:':>10s} {len(test_passes)}\n{'Failed:':>10s} {len(test_fails)}\n"
+    )
+    email_text += f"{HLINE}\n"
+
+    email_text += header_text.format("PASSED")
+    for case in test_passes:
+        _name = " ".join(case.split("_")[1:-1])
+        email_text += f"{_name:44s}: {info[case]['time']}\n"
+
+    email_text += header_text.format("FAILED")
+    for case in test_fails:
+        _name = " ".join(case.split("_")[1:-1])
+        email_text += f"{_name:44s}: {info[case]['time']}\n"
+
+    email_text += f"\nTOTAL TIME: {total_time_case}\n"
+    email_text += get_repo_info()
+    email_text += email_footer()
+
+    subject = (
+        f"[New MALI Tests] {dt.datetime.now().strftime('%Y-%m-%d')}: "
+        f"{len(test_passes)} / {len(info)} passed"
+    )
+
+    return subject, email_text
+
+
 def send_email(cl_args, model, subject, email_text):
     """
     Send e-mail with summary (or don't if cl_args indicate do-not-send)
@@ -307,8 +397,7 @@ def parse_bisicles_time(in_time):
 
 
 def parse_bisicles_log(log_file):
-    """Parse a BISICLES log file.
-    """
+    """Parse a BISICLES log file."""
     n_pass = 0
     n_fail = 0
     builds = {"r": "release", "t": "trunk"}
@@ -414,11 +503,16 @@ def main(cl_args):
     model = str(cl_args.model).lower()
     if model == "mali":
         subject, email_text = mali()
+
+    elif model == "newmali":
+        subject, email_text = new_mali_compass("full_integration")
+
     elif model == "bisicles":
         curr_date = dt.datetime.now().strftime("%Y-%m-%d")
         subject, email_text = bisicles(
             Path("/global/cscratch1/sd/mek/bisicles"), curr_date
         )
+
     else:
         raise NotImplementedError(f"Model summary for {model} not defined")
 

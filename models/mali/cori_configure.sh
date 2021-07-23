@@ -20,5 +20,6 @@ if [ ! -d compass ]; then
 fi
 pushd compass || exit
 git clean -fx || exit
-git pull --ff-only --recurse || exit
+git submodule update --init --recursive
+git pull --recurse-submodules --ff-only || exit
 popd || exit
