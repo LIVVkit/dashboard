@@ -78,6 +78,12 @@ def run(build_profile, pyctest_args):
     ready_machine.Execute()
     helpers.Cleanup(pyctest.BINARY_DIRECTORY)
 
+    # Try again a few times if the submission fails...maybe helps the problem
+    # with tests completing but not submitting to CDash, I hope?
+    # Also increase the time between attempts
+    pyctest.SUBMIT_RETRY_COUNT = 3
+    pyctest.SUBMIT_RETRY_DELAY = 45
+
     if "configure_command" in build_profile:
         pyctest.CONFIGURE_COMMAND = " ".join(
             ["bash", os.path.basename(build_profile["configure_command"])]
