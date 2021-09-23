@@ -2,12 +2,12 @@
 
 pushd E3SM/components/mpas-albany-landice || exit
 source $HOME/dashboard/nightly_scripts/mali_modules.sh
-module unload craype-hugepages2M
-module load darshan
+# module unload craype-hugepages2M
+# module load darshan
 
 # note this version has no netcdf support
 export PIO=$CSCRATCH/MPAS/Components/build/PIOInstall
-source $CSCRATCH/MPAS/Components/build/AlbanyInstall/export_albany.in
+source $CSCRATCH/MPAS/Components/build/AlbanyInstall/export_albany.in || exit
 
 MPAS_EXTERNAL_LIBS="$ALBANY_LINK_LIBS -lstdc++"
 

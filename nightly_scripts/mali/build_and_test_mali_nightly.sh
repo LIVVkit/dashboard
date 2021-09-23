@@ -28,9 +28,9 @@ TEST_DIR_ARCH=$TEST_ROOT/MALI_`date +"%Y-%m-%d"`
 pushd $NIGHTLY_SCRIPT_DIR || exit
 
 source $CTEST_CONFIG_DIR/mali_modules.sh >& modules.log
-module unload craype-hugepages2M
-module load darshan
-export CRAYPE_LINK_TYPE=STATIC
+# module unload craype-hugepages2M
+# module load darshan
+# export CRAYPE_LINK_TYPE=STATIC
 
 printf "CLEAN UP \n$BASE_DIR/build\n$BASE_DIR/src\n"
 rm -rf $BASE_DIR/build

@@ -5,8 +5,8 @@ CONDA_ENV=/global/common/software/piscees/mali/conda/compass
 COMPASS_DIR=$CSCRATCH/MPAS/MPAS-Model/testing_and_setup/compass
 
 source $HOME/dashboard/nightly_scripts/mali_modules.sh > modules.log
-module unload craype-hugepages2M
-module load darshan
+# module unload craype-hugepages2M
+# module load darshan
 
 source /usr/common/software/python/3.8-anaconda-2020.11/etc/profile.d/conda.sh
 conda activate ${CONDA_ENV}
