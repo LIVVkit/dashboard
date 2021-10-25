@@ -58,16 +58,22 @@ fi
 
 # Setup new COMPASS tests
 pushd $TEST_ROOT/compass
-COMPASS_ENV=dev_compass_1.0.0
+COMPASS_ENV=dev_compass_1.0.0_openmpi
 if [ -d $CSCRATCH/.conda/envs/$COMPASS_ENV ]; then
     # Remove old compass env if it exists already (conflicts happened once)
     # when updating...caused environment solving to hang
     $CSCRATCH/.conda/bin/conda env remove -n $COMPASS_ENV
 fi
-./conda/configure_compass_env.py --conda $CSCRATCH/.conda -c intel -m cori-knl
+# Also check for the temp env
+if [ -d $CSCRATCH/.conda/envs/temp_compass_install ]; then
+    $CSCRATCH/.conda/bin/conda env remove -n temp_compass_install
+fi
+
+./conda/configure_compass_env.py --conda $CSCRATCH/.conda -c intel -m cori-knl --mpi openmpi || exit
 
 # Load conda environment
-source $TEST_ROOT/compass/load_dev_compass_1.0.0_cori-knl_intel_impi.sh
+# source $TEST_ROOT/compass/load_dev_compass_1.0.0_cori-knl_intel_openmpi.sh
+source $TEST_ROOT/compass/load_${COMPASS_ENV}.sh
 
 # Temporary install so summary e-mails can be sent by this environment
 conda install -c conda-forge gitpython svn ruamel.yaml -y
@@ -93,8 +99,7 @@ sbatch --wait mali_tests_new.sbatch
 sbatch --wait mali_tests.sbatch
 pushd $DASH_DIR || exit
 
-if [ ${CTEST_DO_SUBMIT} == "ON" ]
-then
+if [ ${CTEST_DO_SUBMIT} == "ON" ]; then
     $CONDA_PREFIX/bin/python summarise.py --model mali -S -C
     $CONDA_PREFIX/bin/python summarise.py --model newmali -S -C
 else
