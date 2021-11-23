@@ -1,4 +1,11 @@
 #!/usr/bin/env bash
+
+# Repository locations
+# svn co https://anag-repo.lbl.gov/svn/BISICLES/public/release/current BISICLES_release
+# svn co https://anag-repo.lbl.gov/svn/BISICLES/public/trunk BISICLES_trunk
+# svn co https://anag-repo.lbl.gov/svn/Chombo/release/3.2 Chombo_release
+# svn co https://anag-repo.lbl.gov/svn/Chombo/trunk Chombo_trunk
+
 BIS_BUILD=$1
 CH_BUILD=$2
 if [ -z "${BIS_BUILD}" ]
