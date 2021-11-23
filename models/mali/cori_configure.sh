@@ -9,7 +9,7 @@ fi
 
 pushd $MODEL_ROOT || exit
 git clean -fx || exit
-git pull --ff-only || exit
+git pull --recurse-submodules --ff-only || exit
 popd || exit
 
 if [ ! -d compass ]; then
