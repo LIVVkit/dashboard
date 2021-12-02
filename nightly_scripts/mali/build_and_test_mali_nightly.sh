@@ -55,7 +55,8 @@ fi
 
 # Setup new COMPASS tests
 pushd $TEST_ROOT/compass
-COMPASS_ENV=dev_compass_1.0.0_openmpi
+COMPASS_MPI=impi
+COMPASS_ENV=dev_compass_1.0.0_${COMPASS_MPI}
 if [ -d $CSCRATCH/.conda/envs/$COMPASS_ENV ]; then
     # Remove old compass env if it exists already (conflicts happened once)
     # when updating...caused environment solving to hang
@@ -66,11 +67,14 @@ if [ -d $CSCRATCH/.conda/envs/temp_compass_install ]; then
     $CSCRATCH/.conda/bin/conda env remove -n temp_compass_install
 fi
 
-./conda/configure_compass_env.py --conda $CSCRATCH/.conda -c intel -m cori-knl --mpi openmpi || exit
+./conda/configure_compass_env.py --conda $CSCRATCH/.conda -c intel -m cori-knl --mpi $COMPASS_MPI || exit
 
-# Load conda environment
+# Find and load conda environment
+LOAD_COMPASS_SCRIPT=$(find $TEST_ROOT/compass  -name load_*compass*.sh)
+source $LOAD_COMPASS_SCRIPT
+
 # source $TEST_ROOT/compass/load_dev_compass_1.0.0_cori-knl_intel_openmpi.sh
-source $TEST_ROOT/compass/load_${COMPASS_ENV}.sh
+# source $TEST_ROOT/compass/load_${COMPASS_ENV}.sh
 
 # Temporary install so summary e-mails can be sent by this environment
 conda install -c conda-forge gitpython svn ruamel.yaml -y
