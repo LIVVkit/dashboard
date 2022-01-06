@@ -9,7 +9,8 @@ source $CSCRATCH/MPAS/Components/build/AlbanyInstall/export_albany.in || exit
 
 MPAS_EXTERNAL_LIBS="$ALBANY_LINK_LIBS -lstdc++"
 
-make clean gnu-nersc \
+# make clean gnu-nersc \
+make clean intel-nersc \
 USE_PIO2=true \
 DEBUG=true \
 PIO=$PIO \
