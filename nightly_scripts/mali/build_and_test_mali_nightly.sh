@@ -13,7 +13,7 @@ export NIGHTLY_SCRIPT_DIR=/global/homes/m/mek/dashboard/nightly_scripts/mali
 export BASE_DIR=$TEST_ROOT/Components
 export EXE_DIR=$TEST_ROOT/Components
 export CTEST_DO_SUBMIT=ON
-export PERFORM_TESTS=OFF
+export PERFORM_TESTS=ON
 export CTEST_CONFIG_DIR=$HOME/dashboard/nightly_scripts/
 export DASH_DIR=/global/homes/m/mek/dashboard
 
