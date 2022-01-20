@@ -8,13 +8,14 @@ export BASE_DIR=$CSCRATCH/bisicles
 export COMP_DIR=$BASE_DIR/Components
 
 export CTEST_DO_SUBMIT=ON
+export PERFORM_TESTS=ON
 
 pushd $SCRIPT_DIR || exit
 
 # source $CTEST_CONFIG_DIR/bisicles_modules.sh >& modules.log
 # Build required components for BISICLES (no tests run on these)
 
-PY_EXE=/global/homes/m/mek/.conda/envs/pyctest/bin/python3
+PY_EXE=/global/common/software/piscees/mali/conda/pyctest/bin/python3
 TESTDIR=/global/homes/m/mek/dashboard
 
 # Chombo, BISICLES order (e.g. rt is Chombo Release BISICLES Trunk)
@@ -32,19 +33,23 @@ do
     fi
 
     # Now submit BISICLES Tests to queue
-    popd
-    pushd $SCRIPT_DIR || exit
-    sbatch --wait bisicles_tests.sbatch
-    # Should only be one LastTest_*.log, copy that out so we can do separate text
-    # processing to create a summary e-mail that's more clear than the CDash one
-    cp $BASE_DIR/Testing/Temporary/LastTest_*.log $BASE_DIR/test_logs/test_${profile}_`date +"%Y-%m-%d"`.log
-    popd
+    if [ ${PERFORM_TESTS} == "ON" ]; then
+        popd
+        pushd $SCRIPT_DIR || exit
+        sbatch --wait bisicles_tests.sbatch
+        # Should only be one LastTest_*.log, copy that out so we can do separate text
+        # processing to create a summary e-mail that's more clear than the CDash one
+        cp $BASE_DIR/Testing/Temporary/LastTest_*.log $BASE_DIR/test_logs/test_${profile}_`date +"%Y-%m-%d"`.log
+        popd
+    fi
 
 done
 
-pushd $TESTDIR
-if [ $CTEST_DO_SUBMIT == "ON" ]; then
-    $PY_EXE summarise.py --model bisicles -S -C
-else
-    $PY_EXE summarise.py --model bisicles
+if [ ${PERFORM_TESTS} == "ON" ]; then
+    pushd $TESTDIR
+    if [ $CTEST_DO_SUBMIT == "ON" ]; then
+        $PY_EXE summarise.py --model bisicles -S -C
+    else
+        $PY_EXE summarise.py --model bisicles
+    fi
 fi

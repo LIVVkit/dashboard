@@ -4,7 +4,7 @@
 #SBATCH --nodes=1
 #SBATCH --constraint=knl
 
-pyexe=/global/homes/m/mek/.conda/envs/pyctest/bin/python3
+pyexe=/global/common/software/piscees/mali/conda/pyctest/bin/python3
 test_dir=/global/homes/m/mek/dashboard
 pushd $test_dir || exit
 if [ $CTEST_DO_SUBMIT ]; then
