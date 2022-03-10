@@ -242,8 +242,13 @@ def new_mali_compass(suite_name):
 
     with open(log_file, "r") as _fin:
         logs = _fin.readlines()
+    # breakpoint()
+    try:
+        times_s = logs.index("Test Runtimes:\n")
+    except ValueError:
+        print("TIMES NOT FOUND: TESTS PROBABLY TIMED OUT :-(")
+        raise
 
-    times_s = logs.index("Test Runtimes:\n")
     times_e = ["Total runtime" in _line for _line in logs].index(True)
     time_logs = logs[times_s + 1 : times_e]
 
@@ -353,35 +358,36 @@ def send_email(cl_args, model, subject, email_text):
 def bisicles_repo(bisicles_dir):
     """Get SVN repository info for BISICLES."""
     output = f"\n{HLINE * 2} Repository Information {HLINE * 2}\n"
-    for sftwr in ["BISICLES", "Chombo"]:
-        for vers in ["release", "trunk"]:
-            repo_dir = Path(bisicles_dir, f"{sftwr}_{vers}")
-            client = svnl.LocalClient(repo_dir)
-            try:
-                info = client.info()
-            except ET.ParseError:
-                output += "#### XML PARSE ERROR ####\n"
-                continue
+    # for sftwr in ["BISICLES", "Chombo"]:
+        # for vers in ["release", "trunk"]:
+    for sftwr, vers in [("BISICLES", "trunk"), ("Chombo", "trunk"), ("Chombo", "release")]:
+        repo_dir = Path(bisicles_dir, f"{sftwr}_{vers}")
+        client = svnl.LocalClient(repo_dir)
+        try:
+            info = client.info()
+        except ET.ParseError:
+            output += "#### XML PARSE ERROR ####\n"
+            continue
 
-            # Make sure there aren't newer entries in the log...svn is weird?
-            log = list(client.log_default(revision_from=info["commit_revision"]))
-            latest = log[-1]
-            try:
-                message = f"{latest.msg.strip()}"
-            except (TypeError, AttributeError):
-                message = "NO MESSAGE"
-            if len(message) > 70:
-                message = f"{message[:70]}..."
+        # Make sure there aren't newer entries in the log...svn is weird?
+        log = list(client.log_default(revision_from=info["commit_revision"]))
+        latest = log[-1]
+        try:
+            message = f"{latest.msg.strip()}"
+        except (TypeError, AttributeError):
+            message = "NO MESSAGE"
+        if len(message) > 70:
+            message = f"{message[:70]}..."
 
-            output += f"""{sftwr}: {vers}
-            URL: {info['url']}
-    Current rev: {latest.revision}
-        info rev: {info['commit_revision']}
-            Author: {latest.author}
-        Message: {message}
-            Date: {latest.date.strftime('%Y-%m-%d %H:%M')}
-    """
-            output += f"{'-' * 55}\n"
+        output += f"""{sftwr}: {vers}
+        URL: {info['url']}
+Current rev: {latest.revision}
+    info rev: {info['commit_revision']}
+        Author: {latest.author}
+    Message: {message}
+        Date: {latest.date.strftime('%Y-%m-%d %H:%M')}
+"""
+        output += f"{'-' * 55}\n"
     return output
 
 

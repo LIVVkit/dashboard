@@ -109,23 +109,23 @@ if [ ${PERFORM_TESTS} == "ON" ]; then
     popd
     pushd $NIGHTLY_SCRIPT_DIR || exit
     sbatch --wait mali_tests_new.sbatch
-    sbatch --wait mali_tests.sbatch
+    # sbatch --wait mali_tests.sbatch
     pushd $DASH_DIR || exit
 
     if [ ${CTEST_DO_SUBMIT} == "ON" ]; then
-        $CONDA_PREFIX/bin/python summarise.py --model mali -S -C
+        # $CONDA_PREFIX/bin/python summarise.py --model mali -S -C
         $CONDA_PREFIX/bin/python summarise.py --model newmali -S -C
     else
-        $CONDA_PREFIX/bin/python summarise.py --model mali
+        # $CONDA_PREFIX/bin/python summarise.py --model mali
         $CONDA_PREFIX/bin/python summarise.py --model newmali
     fi
 
     # Archive the OLD regression suite
     # Make a backup copy of an already existing archive. Why this happens? Dunno yet.
-    if [ -e $TEST_DIR_ARCH ];then
-        mv $TEST_DIR_ARCH ${TEST_DIR_ARCH}_`date +"%s"`
-    fi
-    cp -R $TEST_DIR_RUN $TEST_DIR_ARCH
+    # if [ -e $TEST_DIR_ARCH ];then
+    #     mv $TEST_DIR_ARCH ${TEST_DIR_ARCH}_`date +"%s"`
+    # fi
+    # cp -R $TEST_DIR_RUN $TEST_DIR_ARCH
 
     # Archive the NEW regression suite
     # Make a backup copy of an already existing archive. Why this happens? Dunno yet.
@@ -136,15 +136,15 @@ if [ ${PERFORM_TESTS} == "ON" ]; then
 
     chgrp -R piscees $CSCRATCH/MPAS
 
-    REF_DIR=$TEST_ROOT/MALI_Reference/landice
-    OUTDIR=/project/projectdirs/piscees/www/mek/vv_`date '+%Y_%m_%d'`
-    LATEST_LINK=/project/projectdirs/piscees/www/mek/latest
-    $HOME/.conda/envs/livv/bin/livv -v $TEST_DIR_ARCH/landice $REF_DIR -o $OUTDIR -p 32 || exit
-    chmod -R 0755 $OUTDIR
-    rm -f $LATEST_LINK
-    ln -sf $OUTDIR $LATEST_LINK
-    chmod -R 0755 $LATEST_LINK
+    # REF_DIR=$TEST_ROOT/NewTests/MALI_Reference/landice
+    # OUTDIR=/project/projectdirs/piscees/www/mek/vv_`date '+%Y_%m_%d'`
+    # LATEST_LINK=/project/projectdirs/piscees/www/mek/latest
+    # $HOME/.conda/envs/livv/bin/livv -v $TEST_DIR_ARCH_NEW/landice $REF_DIR -o $OUTDIR -p 32 || exit
+    # chmod -R 0755 $OUTDIR
+    # rm -f $LATEST_LINK
+    # ln -sf $OUTDIR $LATEST_LINK
+    # chmod -R 0755 $LATEST_LINK
 
     echo "Results available at: https://portal.nersc.gov/project/piscees/mek/index.html"
-    echo "LIVV Results available at: https://portal.nersc.gov/project/piscees/mek/vv_`date '+%Y_%m_%d'`"
+    # echo "LIVV Results available at: https://portal.nersc.gov/project/piscees/mek/vv_`date '+%Y_%m_%d'`"
 fi
