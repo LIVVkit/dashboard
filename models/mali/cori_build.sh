@@ -9,12 +9,12 @@ source $CSCRATCH/MPAS/Components/build/AlbanyInstall/export_albany.in || exit
 
 MPAS_EXTERNAL_LIBS="$ALBANY_LINK_LIBS -lstdc++"
 
-# make clean gnu-nersc \
-make clean intel-nersc \
+# make clean intel-nersc \
+make clean gnu-nersc \
 USE_PIO2=true \
 DEBUG=true \
 PIO=$PIO \
 MPAS_EXTERNAL_LIBS="$MPAS_EXTERNAL_LIBS" \
-ALBANY=true || exit
+ALBANY=true | tee $TEST_ROOT/mali_build_log_$(date +'%Y-%m-%d').log || exit
 
 chgrp -R piscees .
