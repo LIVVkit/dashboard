@@ -19,8 +19,9 @@ PY_EXE=/global/common/software/piscees/mali/conda/pyctest/bin/python3
 TESTDIR=/global/homes/m/mek/dashboard
 
 # Chombo, BISICLES order (e.g. rt is Chombo Release BISICLES Trunk)
-for profile in rr tt rt tr
+# for profile in rr tt rt tr
 # for profile in tt
+for profile in tt rt
 do
     # Now perform BISICLES build
     printf "Build BISICLES $profile\n"
