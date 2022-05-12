@@ -5,6 +5,7 @@ source $HOME/dashboard/nightly_scripts/mali_modules.sh
 
 # note this version has no netcdf support
 export PIO=$CSCRATCH/MPAS/Components/build/PIOInstall
+export LD_LIBRARY_PATH=$BASE_DIR/build/TrilinosInstall/lib:$BASE_DIR/build/AlbanyInstall/lib:$BASE_DIR/build/PIOInstall/lib:$LD_LIBRARY_PATH
 source $CSCRATCH/MPAS/Components/build/AlbanyInstall/export_albany.in || exit
 
 MPAS_EXTERNAL_LIBS="$ALBANY_LINK_LIBS -lstdc++"
