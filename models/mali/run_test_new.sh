@@ -2,6 +2,7 @@
 testname=$1
 casename=$2
 TEST_DIR=$CSCRATCH/MPAS/NewTests/MALI_Test
+echo "USING LD_LIBRARY_PATH ${LD_LIBRARY_PATH}"
 
 echo "RUN $1 $2 Test"
 if [ $testname == "echo" ];then
