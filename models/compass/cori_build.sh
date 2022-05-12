@@ -7,25 +7,20 @@
 # - BASE_DIR_NEW
 # - TEST_ROOT
 
-export COMPASS_ENV=dev_compass_1.0.0_${COMPASS_MPI}
-export ENV_NAME=dev_compass_1.0.0
-if [ -d $CSCRATCH/.conda/envs/$COMPASS_ENV ]; then
-    # Remove old compass env if it exists already (conflicts happened once)
-    # when updating...caused environment solving to hang
-    $CSCRATCH/.conda/bin/conda env remove -n $COMPASS_ENV
-fi
+export CONDA_DIR=$CSCRATCH/.conda
 
-# Also check for a directory with just the name (no mpi version attached)
-if [ -d $CSCRATCH/.conda/envs/$ENV_NAME ]; then
-    $CSCRATCH/.conda/bin/conda env remove -n $ENV_NAME
-fi
+for env in $(/bin/ls $CONDA_DIR/envs)
+do
+    echo REMOVE ${env}
+    $CSCRATCH/.conda/bin/conda env remove -n ${env}
+done
 
-# Also check for the temp env
-if [ -d $CSCRATCH/.conda/envs/temp_compass_install ]; then
-    $CSCRATCH/.conda/bin/conda env remove -n temp_compass_install
-fi
-
-./conda/configure_compass_env.py --conda $CSCRATCH/.conda -c intel -m cori-knl --mpi $COMPASS_MPI || exit
+./conda/configure_compass_env.py \
+    --conda $CSCRATCH/.conda \
+    --compiler intel \
+    --machine cori-knl \
+    --mpi $COMPASS_MPI \
+    --env_only || exit
 
 # Find and load conda environment
 LOAD_COMPASS_SCRIPT=$(find $TEST_ROOT/compass -iname "load_*compass*.sh")
@@ -42,10 +37,9 @@ compass suite \
 --core landice \
 --test_suite full_integration \
 --setup \
---config_file compass/machines/cori-knl.cfg \
+--config_file compass/machines/cori-haswell.cfg \
+--machine cori-haswell \
 --work_dir $TEST_DIR_RUN_NEW \
 --baseline_dir $BASE_DIR_NEW \
 --mpas_model $TEST_ROOT/E3SM/components/mpas-albany-landice \
 --clean || exit
-
-# --machine cori-knl \
