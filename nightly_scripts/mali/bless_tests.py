@@ -6,6 +6,7 @@ import os
 from pathlib import Path
 from xml.dom import minidom
 import subprocess
+import pickle as pk
 
 
 def args():
@@ -15,7 +16,7 @@ def args():
     )
 
     parser.add_argument(
-        "-t",
+        "-d",
         "--test_date",
         required=True,
         help="Date of COMPASS test where new reference is located in YYYY-MM-DD format",
@@ -29,6 +30,13 @@ def args():
             "This can also be a comma separated list of tests from the same run\n"
             "(e.g. HO_GIS_restart_test,HO_dome_decomposition_test"
         ),
+    )
+    parser.add_argument(
+        "--new",
+        required=False,
+        help="Bless \"new\" compass tests",
+        action="store_true",
+        default=False,
     )
 
     return parser.parse_args()
@@ -46,7 +54,7 @@ def dir_size(path):
     return int(subprocess.check_output(["du", "-s", path]).split()[0].decode("utf-8"))
 
 
-def get_test_info(tests, ref_root, test_root, test_name):
+def get_test_info_old(tests, ref_root, test_root, test_name):
     """Get the reference and test directories for a COMPASS test."""
     test_names = [
         test.attributes["name"].value.replace(" ", "_").lower() for test in tests
@@ -63,6 +71,24 @@ def get_test_info(tests, ref_root, test_root, test_name):
     )
     _test_dir = Path(test_root, _dir)
     _ref_dir = Path(ref_root, _dir)
+    return {
+        "test_name": test_name,
+        "ref_dir": _ref_dir,
+        "test_dir": _test_dir,
+        "ref_output": [_ for _ in _ref_dir.rglob("output*.nc")],
+        "test_output": [_ for _ in _test_dir.rglob("output*.nc")],
+    }
+
+
+def get_test_info_new(tests, ref_root, test_root, test_name):
+
+    for _key in tests["test_cases"]:
+        if test_name == _key.replace("/", "_"):
+            test_key = _key
+
+    _ref_dir = Path(ref_root, tests["test_cases"][test_key].path)
+    _test_dir = Path(test_root, tests["test_cases"][test_key].path)
+
     return {
         "test_name": test_name,
         "ref_dir": _ref_dir,
@@ -109,26 +135,37 @@ def main(cl_args):
     """Define stuff."""
     cscratch = os.environ["CSCRATCH"]
     core = "landice"
-    regsuite_file = Path(
-        cscratch,
-        "MPAS",
-        "MPAS-Model",
-        "testing_and_setup",
-        "compass",
-        core,
-        "regression_suites",
-        "combined_integration_test_suite.xml",
-    )
-    regsuite = minidom.parse(regsuite_file.as_posix())
-    tests = regsuite.getElementsByTagName("test")
-    ref_root = Path(cscratch, "MPAS", "MALI_Reference")
-    new_ref = Path(cscratch, "MPAS", f"MALI_{cl_args.test_date}")
+
+    if cl_args.new:
+        ref_root = Path(cscratch, "MPAS", "NewTests", "MALI_Reference")
+        new_ref = Path(cscratch, "MPAS", "NewTests", f"MALI_{cl_args.test_date}")
+        regsuite_file = Path(new_ref, "full_integration.pickle")
+        tests = pk.load(open(regsuite_file, "rb"))
+    else:
+        regsuite_file = Path(
+            cscratch,
+            "MPAS",
+            "MPAS-Model",
+            "testing_and_setup",
+            "compass",
+            core,
+            "regression_suites",
+            "combined_integration_test_suite.xml",
+        )
+        regsuite = minidom.parse(regsuite_file.as_posix())
+        tests = regsuite.getElementsByTagName("test")
+
+        ref_root = Path(cscratch, "MPAS", "MALI_Reference")
+        new_ref = Path(cscratch, "MPAS", f"MALI_{cl_args.test_date}")
 
     test_names = cl_args.test_name.split(",")
     for test_name in test_names:
         test_name = test_name.strip()
         print(f"------BLESSING: {test_name}------")
-        test_info = get_test_info(tests, ref_root, new_ref, test_name)
+        if cl_args.new:
+            test_info = get_test_info_new(tests, ref_root, new_ref, test_name)
+        else:
+            test_info = get_test_info_old(tests, ref_root, new_ref, test_name)
         move_files(test_info)
 
 
