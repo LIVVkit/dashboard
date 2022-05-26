@@ -38,7 +38,7 @@ def args():
     )
 
     parser.add_argument(
-        "-m", "--model", help="Model profile (mali, newmali or bisicles)"
+        "-m", "--model", help="Model profile (oldmali, mali or bisicles)"
     )
 
     parser.add_argument(
@@ -150,7 +150,7 @@ def read_mali_case(case):
     return CaseInfo(case.name, _passed, _time)
 
 
-def mali():
+def old_mali():
     """
     Assemble summary of testing and send email to interested folks.
 
@@ -220,7 +220,8 @@ def mali():
     return subject, email_text
 
 
-def parse_new_compass_log(log):
+def parse_compass_log(log):
+    """Read compass log, convert times for each test into `datetime.timedelta`."""
     time, status, name = log
     mins, secs = time.split(":")
     out_time = dt.timedelta(seconds=(int(mins) * 60 + int(secs)))
@@ -228,8 +229,9 @@ def parse_new_compass_log(log):
     return out_time, passed, name
 
 
-def new_mali_compass(suite_name):
-    in_dir = Path("/global/cscratch1/sd/mek/MPAS/NewTests/MALI_Test")
+def mali_compass(suite_name):
+    """Parse output of compass v1.0 test suite."""
+    in_dir = Path("/global/cscratch1/sd/mek/MPAS/TestOutput/MALI_Test")
     test_def = Path(in_dir, f"{suite_name}.pickle")
     log_file = Path(in_dir, f"{suite_name}.log")
     run_date = dt.datetime.utcfromtimestamp(log_file.stat().st_ctime)
@@ -242,7 +244,6 @@ def new_mali_compass(suite_name):
 
     with open(log_file, "r") as _fin:
         logs = _fin.readlines()
-    # breakpoint()
     try:
         times_s = logs.index("Test Runtimes:\n")
     except ValueError:
@@ -257,7 +258,7 @@ def new_mali_compass(suite_name):
     time_logs = [esc_chars.sub("", _line).strip().split(" ") for _line in time_logs]
     info = {}
     for line in time_logs:
-        _time, _pass, _name = parse_new_compass_log(line)
+        _time, _pass, _name = parse_compass_log(line)
         info[_name] = {"time": _time, "passed": _pass}
 
     total_time_case = dt.timedelta(0)
@@ -267,8 +268,8 @@ def new_mali_compass(suite_name):
     test_fails = []
     test_passes = []
 
-    for case in info:
-        if info[case]["passed"]:
+    for case, caseinfo in info.items():
+        if caseinfo["passed"]:
             test_passes.append(case)
         else:
             test_fails.append(case)
@@ -276,7 +277,10 @@ def new_mali_compass(suite_name):
     cases_not_run = set(info.keys()).symmetric_difference(case_canon)
     if cases_not_run:
         for case in cases_not_run:
-            info[case] = {"time": dt.timedelta(seconds=2 * FAILED_TO_RUN), "passed": False}
+            info[case] = {
+                "time": dt.timedelta(seconds=2 * FAILED_TO_RUN),
+                "passed": False,
+            }
         test_fails.extend(list(cases_not_run))
 
     header_text = "\n>>>>>> TESTS {} <<<<<<\n"
@@ -303,7 +307,7 @@ def new_mali_compass(suite_name):
     email_text += email_footer()
 
     subject = (
-        f"[New MALI Tests] {dt.datetime.now().strftime('%Y-%m-%d')}: "
+        f"[MALI Tests] {dt.datetime.now().strftime('%Y-%m-%d')}: "
         f"{len(test_passes)} / {len(info)} passed"
     )
 
@@ -359,8 +363,12 @@ def bisicles_repo(bisicles_dir):
     """Get SVN repository info for BISICLES."""
     output = f"\n{HLINE * 2} Repository Information {HLINE * 2}\n"
     # for sftwr in ["BISICLES", "Chombo"]:
-        # for vers in ["release", "trunk"]:
-    for sftwr, vers in [("BISICLES", "trunk"), ("Chombo", "trunk"), ("Chombo", "release")]:
+    # for vers in ["release", "trunk"]:
+    for sftwr, vers in [
+        ("BISICLES", "trunk"),
+        ("Chombo", "trunk"),
+        ("Chombo", "release"),
+    ]:
         repo_dir = Path(bisicles_dir, f"{sftwr}_{vers}")
         client = svnl.LocalClient(repo_dir)
         try:
@@ -436,7 +444,7 @@ def parse_bisicles_log(log_file):
         curr_idx = test_info[_test]["idx"]
         test_info[_test]["other_data"] = test_data[last_idx : curr_idx + 3]
         last_idx = curr_idx
-        if any(["Passed" in _ for _ in test_info[_test]["other_data"]]):
+        if any("Passed" in _ for _ in test_info[_test]["other_data"]):
             test_info[_test]["passed"] = "Passed"
             n_pass += 1
         else:
@@ -507,11 +515,11 @@ def email_footer():
 def main(cl_args):
     """Choose which model to send summary for."""
     model = str(cl_args.model).lower()
-    if model == "mali":
-        subject, email_text = mali()
+    if model == "oldmali":
+        subject, email_text = old_mali()
 
-    elif model == "newmali":
-        subject, email_text = new_mali_compass("full_integration")
+    elif model == "mali":
+        subject, email_text = mali_compass("full_integration")
 
     elif model == "bisicles":
         curr_date = dt.datetime.now().strftime("%Y-%m-%d")
