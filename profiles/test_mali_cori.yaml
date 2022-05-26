@@ -1,32 +1,33 @@
 source_directory: /global/cscratch1/sd/mek/MPAS/MPAS-Model
 build_directory: /global/cscratch1/sd/mek/MPAS
-build_name: MALI-Test
-build_command: models/mali/cori_setup_tests.sh
-test_command: models/mali/run_test.sh
+build_name: MALI-Test-NewCompass
+# build_command: models/mali/cori_setup_tests_new.sh
+test_command: models/mali/run_test_new.sh
 cdash_section: MALI
-test_timeout: 7770
+# test_timeout: 18600
+test_timeout: 8820
 tests:
-  - regsuite
-  - echo,Circular_shelf_decomposition_test
-  - echo,Confined_shelf_decomposition_test
-  - echo,Dome_decomposition_test
-  - echo,Dome_restart_test
-  - echo,Dome_varres_decomposition_test
-  - echo,Dome_varres_restart_test
-  - echo,EISMINT2-F_decomposition_test
-  - echo,EISMINT2-F_enthalpy_decomposition_test
-  - echo,EISMINT2-F_enthalpy_restart_test
-  - echo,EISMINT2-F_restart_test
-  - echo,GIS_decomposition_test
-  - echo,GIS_restart_test
-  - echo,HO_dome_decomposition_test
-  - echo,HO_dome_restart_test
-  - echo,HO_dome_varres_decomposition_test
-  - echo,HO_dome_varres_restart_test
-  - echo,HO_dome_vs._SIA_dome_test
-  - echo,HO_GIS_restart_test
-  - echo,hydro-radial_decomposition_test
-  - echo,hydro-radial_restart_test
-  - echo,Kleiner_enthalpy_benchmark_A
-  - echo,MISMIP+_restart_test
-  - echo,Thwaites_4km_restart_test
+  - full_integration
+  - echo,landice_dome_2000m_sia_restart_test
+  - echo,landice_dome_2000m_sia_decomposition_test
+  - echo,landice_dome_variable_resolution_sia_restart_test
+  - echo,landice_dome_variable_resolution_sia_decomposition_test
+  - echo,landice_enthalpy_benchmark_A
+  - echo,landice_eismint2_decomposition_test
+  - echo,landice_eismint2_enthalpy_decomposition_test
+  - echo,landice_eismint2_restart_test
+  - echo,landice_eismint2_enthalpy_restart_test
+  - echo,landice_greenland_sia_restart_test
+  - echo,landice_greenland_sia_decomposition_test
+  - echo,landice_hydro_radial_restart_test
+  - echo,landice_hydro_radial_decomposition_test
+  - echo,landice_dome_2000m_fo_decomposition_test
+  - echo,landice_dome_2000m_fo_restart_test
+  - echo,landice_dome_variable_resolution_fo_decomposition_test
+  - echo,landice_dome_variable_resolution_fo_restart_test
+  - echo,landice_circular_shelf_decomposition_test
+  - echo,landice_greenland_fo_decomposition_test
+  - echo,landice_greenland_fo_restart_test
+  - echo,landice_thwaites_decomposition_test
+  - echo,landice_thwaites_restart_test
+  - echo,landice_humboldt_mesh-3km_restart_test_velo-fo_calving-von_mises_stress_damage-threshold_faceMelting
