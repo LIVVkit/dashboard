@@ -17,11 +17,10 @@ export PERFORM_TESTS=ON
 export CTEST_CONFIG_DIR=$HOME/dashboard/nightly_scripts/
 export DASH_DIR=/global/homes/m/mek/dashboard
 
-# Testing directories for New COMPASS, and the new mpi implementation
-export BASE_DIR=$TEST_ROOT/TestOutput/MALI_Reference
-export TEST_DIR_RUN_NEW=$TEST_ROOT/TestOutput/MALI_Test
-export TEST_DIR_ARCH_NEW=$TEST_ROOT/TestOutput/MALI_`date +"%Y-%m-%d"`
-export COMPASS_MPI=impi
+# Reference, testing, and archive directories for COMPASS
+export REF_DIR=$TEST_ROOT/TestOutput/MALI_Reference
+export TEST_DIR_RUN=$TEST_ROOT/TestOutput/MALI_Test
+export TEST_DIR_ARCH=$TEST_ROOT/TestOutput/MALI_`date +"%Y-%m-%d"`
 
 pushd $NIGHTLY_SCRIPT_DIR || exit
 
@@ -70,26 +69,19 @@ if [ ${PERFORM_TESTS} == "ON" ]; then
         $CONDA_PREFIX/bin/python summarise.py --model mali
     fi
 
-    # Archive the OLD regression suite
+    # Archive the regression suite
     # Make a backup copy of an already existing archive. Why this happens? Dunno yet.
-    # if [ -e $TEST_DIR_ARCH ];then
-    #     mv $TEST_DIR_ARCH ${TEST_DIR_ARCH}_`date +"%s"`
-    # fi
-    # cp -R $TEST_DIR_RUN $TEST_DIR_ARCH
-
-    # Archive the NEW regression suite
-    # Make a backup copy of an already existing archive. Why this happens? Dunno yet.
-    if [ -e $TEST_DIR_ARCH_NEW ];then
-        mv $TEST_DIR_ARCH_NEW ${TEST_DIR_ARCH_NEW}_`date +"%s"`
+    if [ -e $TEST_DIR_ARCH ];then
+        mv $TEST_DIR_ARCH ${TEST_DIR_ARCH}_`date +"%s"`
     fi
-    cp -R $TEST_DIR_RUN_NEW $TEST_DIR_ARCH_NEW
+    cp -R $TEST_DIR_RUN $TEST_DIR_ARCH
 
     chgrp -R piscees $CSCRATCH/MPAS
 
-    # REF_DIR=$TEST_ROOT/NewTests/MALI_Reference/landice
+    # REF_DIR=$TEST_ROOT//MALI_Reference/landice
     # OUTDIR=/project/projectdirs/piscees/www/mek/vv_`date '+%Y_%m_%d'`
     # LATEST_LINK=/project/projectdirs/piscees/www/mek/latest
-    # $HOME/.conda/envs/livv/bin/livv -v $TEST_DIR_ARCH_NEW/landice $REF_DIR -o $OUTDIR -p 32 || exit
+    # $HOME/.conda/envs/livv/bin/livv -v $TEST_DIR_ARCH/landice $REF_DIR -o $OUTDIR -p 32 || exit
     # chmod -R 0755 $OUTDIR
     # rm -f $LATEST_LINK
     # ln -sf $OUTDIR $LATEST_LINK

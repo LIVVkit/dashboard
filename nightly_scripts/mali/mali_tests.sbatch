@@ -1,6 +1,6 @@
 #!/bin/bash
 #SBATCH --qos=regular
-#SBATCH --time=02:30:00
+#SBATCH --time=01:30:00
 #SBATCH --nodes=1
 #SBATCH --constraint=knl
 echo "SUBMIT? ${CTEST_DO_SUBMIT}"
@@ -12,7 +12,9 @@ pushd $test_dir || exit
 
 if [ ${CTEST_DO_SUBMIT} == "ON" ]
 then
-    $PY_EXE worker.py profiles/test_mali_cori_new.yaml --site cori-knl -S
+    SUBMIT_FLAG="-S"
 else
-    $PY_EXE worker.py profiles/test_mali_cori_new.yaml --site cori-knl
+    SUBMIT_FLAG=""
 fi
+
+$PY_EXE worker.py profiles/test_mali_cori.yaml --site cori-knl ${SUBMIT_FLAG}
