@@ -18,7 +18,7 @@ if [ $testname == "echo" ];then
         exit 0
     fi
 else
-    LOGFILE=$CSCRATCH/MPAS/NewTests/MALI_Test/$1.log
+    LOGFILE=${TEST_DIR}/$1.log
     CMP_ACTIVATE=$(find $CSCRATCH/MPAS/compass -name "load*compass*.sh")
     source $CMP_ACTIVATE
     pushd $TEST_DIR || exit
