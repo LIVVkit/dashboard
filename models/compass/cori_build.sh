@@ -9,10 +9,11 @@
 
 export CONDA_DIR=$CSCRATCH/.conda
 
-for env in $(/bin/ls $CONDA_DIR/envs)
+# for env in $(/bin/ls $CONDA_DIR/envs)
+for env in $(find ${CONDA_DIR}/envs -name "*compass*")
 do
-    echo REMOVE ${env}
-    $CSCRATCH/.conda/bin/conda env remove -n ${env}
+    echo REMOVE $(basename ${env})
+    $CSCRATCH/.conda/bin/conda env remove -n $(basename ${env})
 done
 
 ./conda/configure_compass_env.py \
@@ -25,7 +26,7 @@ LOAD_COMPASS_SCRIPT=$(find $TEST_ROOT/compass -iname "load_*compass*.sh")
 source $LOAD_COMPASS_SCRIPT
 
 # Temporary install so summary e-mails can be sent by this environment
-conda install -c conda-forge gitpython svn ruamel.yaml -y
+$CONDA_DIR/condabin/mamba install -c conda-forge gitpython svn ruamel.yaml -y
 pip install svn pysvn
 
 # Clean up old logs
