@@ -60,6 +60,8 @@ def parse_args(cl_args=None):
 
 
 def run(build_profile, pyctest_args):
+    mali_pio_error = "Failed to compile a PIO test program"
+
     pyctest.MODEL = build_profile["cdash_section"]
     pyctest.BUILD_NAME = build_profile["build_name"]
 
@@ -98,6 +100,8 @@ def run(build_profile, pyctest_args):
         pyctest.BUILD_COMMAND = " ".join(
             ["bash", os.path.basename(build_profile["build_command"])]
         )
+        if "MALI" in pyctest.BUILD_NAME:
+            pyctest.set("CTEST_CUSTOM_ERROR_MATCH", mali_pio_error)
 
     if "tests" in build_profile:
         # Check links to see where BISICLES and Chombo point to
