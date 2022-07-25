@@ -6,6 +6,7 @@ export CTEST_CONFIG_DIR=$HOME/dashboard/nightly_scripts/
 export SCRIPT_DIR=$HOME/dashboard/nightly_scripts/bisicles
 export BASE_DIR=$CSCRATCH/bisicles
 export COMP_DIR=$BASE_DIR/Components
+export MODEL_DEFS_DIR=$HOME/dashboard/models/bisicles
 
 export CTEST_DO_SUBMIT=ON
 export PERFORM_TESTS=ON
@@ -17,6 +18,9 @@ pushd $SCRIPT_DIR || exit
 
 PY_EXE=/global/common/software/piscees/mali/conda/pyctest/bin/python3
 TESTDIR=/global/homes/m/mek/dashboard
+
+# Copy make.defs files
+cp $MODEL_DEFS_DIR/Make.defs.local* $BASE_DIR
 
 # Chombo, BISICLES order (e.g. rt is Chombo Release BISICLES Trunk)
 # for profile in rr tt rt tr

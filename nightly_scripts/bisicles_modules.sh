@@ -1,6 +1,6 @@
 export NERSC_HOST=`/usr/common/usg/bin/nersc_host`
-# PYTHON_DIST=3.9-anaconda-2021.11
-PYTHON_DIST=3.8-anaconda-2020.11
+PYTHON_VERSION=3.9
+PYTHON_DIST=${PYTHON_VERSION}-anaconda-2021.11
 
 source /usr/common/software/python/${PYTHON_DIST}/etc/profile.d/conda.sh
 conda deactivate
