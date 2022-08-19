@@ -135,7 +135,7 @@ def move_files(test_info):
 
 def main(cl_args):
     """Define stuff."""
-    cscratch = os.environ["CSCRATCH"]
+    cscratch = os.environ["SCRATCH"]
     core = "landice"
 
     if cl_args.legacy:

@@ -75,17 +75,19 @@ def get_unrun_cases(case_dir):
     return tests_not_run
 
 
-def get_repo_info():
+def get_repo_info(test_root=None):
     """Get repository info for components and MALI."""
-    _component_root = Path(os.environ["CSCRATCH"], "MPAS", "Components", "src")
+    if test_root is None:
+        test_root = os.environ["SCRATCH"]
+    _component_root = Path(test_root, "MPAS", "Components", "src")
 
     repo_locs = {
         "Albany": Path(_component_root, "Albany"),
         "PIO": Path(_component_root, "PIO"),
         "Trilinos": Path(_component_root, "Trilinos"),
-        "COMPASS": Path(os.environ["CSCRATCH"], "MPAS", "compass"),
-        # "MALI": Path(os.environ["CSCRATCH"], "MPAS", "MPAS-Model"),
-        "MALI": Path(os.environ["CSCRATCH"], "MPAS", "E3SM"),
+        "COMPASS": Path(test_root, "MPAS", "compass"),
+        # "MALI": Path(test_root, "MPAS", "MPAS-Model"),
+        "MALI": Path(test_root, "MPAS", "E3SM"),
     }
     repo_info = "\n\n>>>>>> Source Repositories <<<<<<\n"
     spc = "      "
@@ -165,7 +167,7 @@ def old_mali():
         Subject line and body of e-mail to be sent
 
     """
-    scratch_root = os.environ["CSCRATCH"]
+    scratch_root = os.environ["SCRATCH"]
     in_dir = Path(scratch_root, "MPAS", "MALI_Test", "case_outputs")
     # Debug testing example
     # in_dir = Path(scratch_root, "MPAS", "MALI_2021-05-19", "case_outputs")

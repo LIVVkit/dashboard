@@ -1,11 +1,11 @@
 #!/bin/bash
 
 if [[ -z "${BASE_DIR}" ]]; then
-    BASE_DIR=${CSCRATCH}/MPAS/Components
+    BASE_DIR=${SCRATCH}/MPAS/Components
 fi
 
 if [[ -z "${EXE_DIR}" ]]; then
-    EXE_DIR=${CSCRATCH}/MPAS/Components
+    EXE_DIR=${SCRATCH}/MPAS/Components
 fi
 
 if [[ -z "${SCRIPT_DIR}" ]]; then

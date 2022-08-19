@@ -1,9 +1,9 @@
 #!/bin/bash
 testname=$1
 casename=$2
-TEST_DIR=$CSCRATCH/MPAS/TestOutput/MALI_Test
+TEST_DIR=$SCRATCH/MPAS/TestOutput/MALI_Test
 echo "USING LD_LIBRARY_PATH ${LD_LIBRARY_PATH}"
-
+echo "GPMETIS=" $(which gpmetis)
 echo "RUN $1 $2 Test"
 if [ $testname == "echo" ];then
 
@@ -19,7 +19,7 @@ if [ $testname == "echo" ];then
     fi
 else
     LOGFILE=${TEST_DIR}/$1.log
-    CMP_ACTIVATE=$(find $CSCRATCH/MPAS/compass -name "load*compass*.sh")
+    CMP_ACTIVATE=$(find $SCRATCH/MPAS/compass -name "load*compass*.sh")
     source $CMP_ACTIVATE
     pushd $TEST_DIR || exit
     compass run $1 | tee $LOGFILE || exit

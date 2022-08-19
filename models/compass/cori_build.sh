@@ -7,17 +7,17 @@
 # - REF_DIR
 # - TEST_ROOT
 
-export CONDA_DIR=$CSCRATCH/.conda
+export CONDA_DIR=$SCRATCH/.conda
 
 # for env in $(/bin/ls $CONDA_DIR/envs)
 for env in $(find ${CONDA_DIR}/envs -name "*compass*")
 do
     echo REMOVE $(basename ${env})
-    $CSCRATCH/.conda/bin/conda env remove -n $(basename ${env})
+    $SCRATCH/.conda/bin/conda env remove -n $(basename ${env})
 done
 
 ./conda/configure_compass_env.py \
-    --conda $CSCRATCH/.conda \
+    --conda $SCRATCH/.conda \
     --machine cori-knl \
     --env_only || exit
 
