@@ -1,12 +1,13 @@
 #!/bin/bash
 
 pushd E3SM/components/mpas-albany-landice || exit
-source $HOME/dashboard/nightly_scripts/mali_modules.sh
+source $HOME/dashboard/nightly_scripts/mali_modules_${NERSC_HOST}.sh
 
 # note this version has no netcdf support
 export PIO=$SCRATCH/MPAS/Components/build/PIOInstall
 export LD_LIBRARY_PATH=$BASE_DIR/build/TrilinosInstall/lib:$BASE_DIR/build/AlbanyInstall/lib:$BASE_DIR/build/PIOInstall/lib:$LD_LIBRARY_PATH
-source $SCRATCH/MPAS/Components/build/AlbanyInstall/export_albany.in || exit
+ALB_LIBS_FILE=$SCRATCH/MPAS/Components/build/AlbanyInstall/export_albany.in
+source $ALB_LIBS_FILE || exit
 
 MPAS_EXTERNAL_LIBS="$ALBANY_LINK_LIBS -lstdc++"
 

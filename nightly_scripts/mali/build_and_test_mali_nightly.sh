@@ -4,27 +4,55 @@
 # Setup conda
 export CONDA_ENV=/global/common/software/piscees/mali/conda/pyctest
 export PY_EXE=${CONDA_ENV}/bin/python3
-source /usr/common/software/python/3.8-anaconda-2020.11/etc/profile.d/conda.sh
+
+if [[ -z "${NERSC_HOST}" ]]; then
+    HOST=$(hostname)
+else
+    HOST=${NERSC_HOST}
+fi
+
+if [[ $HOST == 'cori' ]]; then
+    source /usr/common/software/python/3.8-anaconda-2020.11/etc/profile.d/conda.sh
+    export CTEST_DO_SUBMIT=ON
+    export SITE=cori-knl
+fi
+if [[ $HOST == 'perlmutter' ]]; then
+    source /global/common/software/nersc/pm-2022q2/sw/python/3.9-anaconda-2021.11/etc/profile.d/conda.sh
+    export CTEST_DO_SUBMIT=OFF
+    export SITE=pm-cpu
+fi
 conda activate $CONDA_ENV
 
 # Setup modules and environment variables
-export TEST_ROOT=$CSCRATCH/MPAS
-export NIGHTLY_SCRIPT_DIR=/global/homes/m/mek/dashboard/nightly_scripts/mali
+export PERFORM_TESTS=ON
+
+export TEST_ROOT=$SCRATCH/MPAS
+export DASH_DIR=${HOME}/dashboard
+export CTEST_CONFIG_DIR=${DASH_DIR}/nightly_scripts
+export NIGHTLY_SCRIPT_DIR=${CTEST_CONFIG_DIR}/mali
 export BASE_DIR=$TEST_ROOT/Components
 export EXE_DIR=$TEST_ROOT/Components
-export CTEST_DO_SUBMIT=ON
-export PERFORM_TESTS=ON
-export CTEST_CONFIG_DIR=$HOME/dashboard/nightly_scripts/
-export DASH_DIR=/global/homes/m/mek/dashboard
 
 # Reference, testing, and archive directories for COMPASS
-export REF_DIR=$TEST_ROOT/TestOutput/MALI_Reference
-export TEST_DIR_RUN=$TEST_ROOT/TestOutput/MALI_Test
-export TEST_DIR_ARCH=$TEST_ROOT/TestOutput/MALI_`date +"%Y-%m-%d"`
+export OUT_ROOT=$TEST_ROOT/TestOutput
+export REF_DIR=$OUT_ROOT/MALI_Reference
+export TEST_DIR_RUN=$OUT_ROOT/MALI_Test
+export TEST_DIR_ARCH=$OUT_ROOT/MALI_`date +"%Y-%m-%d"`
+
+
+for DTEST in ${BASE_DIR} ${EXE_DIR} ${OUT_ROOT}
+do
+    if [[ ! -d ${DTEST} ]]
+    then
+        echo "CREATING ${DTEST}"
+        mkdir -p ${DTEST}
+    fi
+done
+
 
 pushd $NIGHTLY_SCRIPT_DIR || exit
 
-source $CTEST_CONFIG_DIR/mali_modules.sh >& modules.log
+source $CTEST_CONFIG_DIR/mali_modules_${HOST}.sh >& modules_${HOST}.log
 
 printf "CLEAN UP \n$BASE_DIR/build\n$BASE_DIR/src\n"
 rm -rf $BASE_DIR/build
@@ -33,11 +61,11 @@ rm -rf $BASE_DIR/src
 # Build required components for MALI (no tests run on these)
 printf "Build components\n"
 printf "\tTrilinos\n"
-bash ${NIGHTLY_SCRIPT_DIR}/components/cron_script_trilinos_cori.sh
+bash ${NIGHTLY_SCRIPT_DIR}/components/cron_script_trilinos.sh
 printf "\tAlbany\n"
-bash ${NIGHTLY_SCRIPT_DIR}/components/cron_script_albany_cori.sh
+bash ${NIGHTLY_SCRIPT_DIR}/components/cron_script_albany.sh
 printf "\tPIO\n"
-bash ${NIGHTLY_SCRIPT_DIR}/components/cron_script_pio_cori.sh
+bash ${NIGHTLY_SCRIPT_DIR}/components/cron_script_pio.sh
 
 # Now perform MALI build
 printf "Build MALI\n"
@@ -45,11 +73,11 @@ printf "Build MALI\n"
 pushd $DASH_DIR || exit
 if [ ${CTEST_DO_SUBMIT} == "ON" ]
 then
-    $PY_EXE worker.py profiles/build_mali_cori.yaml --site cori-knl -S || exit
-    $PY_EXE worker.py profiles/build_compass_cori.yaml --site cori-knl -S || exit
+    $PY_EXE worker.py profiles/${HOST}/build_mali.yaml --site ${SITE} -S || exit
+    $PY_EXE worker.py profiles/${HOST}/build_compass.yaml --site ${SITE} -S || exit
 else
-    $PY_EXE worker.py profiles/build_mali_cori.yaml --site cori-knl || exit
-    $PY_EXE worker.py profiles/build_compass_cori.yaml --site cori-knl || exit
+    $PY_EXE worker.py profiles/${HOST}/build_mali.yaml --site ${SITE} || exit
+    $PY_EXE worker.py profiles/${HOST}/build_compass.yaml --site ${SITE} || exit
 fi
 
 # Now submit MALI Tests to queue
@@ -76,7 +104,7 @@ if [ ${PERFORM_TESTS} == "ON" ]; then
     fi
     cp -R $TEST_DIR_RUN $TEST_DIR_ARCH
 
-    chgrp -R piscees $CSCRATCH/MPAS
+    chgrp -R piscees ${TEST_ROOT}
 
     # REF_DIR=$TEST_ROOT//MALI_Reference/landice
     # OUTDIR=/project/projectdirs/piscees/www/mek/vv_`date '+%Y_%m_%d'`

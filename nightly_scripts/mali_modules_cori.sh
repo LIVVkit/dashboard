@@ -9,8 +9,7 @@ module load gcc/8.3.0
 module load cray-hdf5-parallel
 module load cray-netcdf-hdf5parallel
 module load cray-parallel-netcdf
-
-export PATH=/project/projectdirs/piscees/tpl/cmake-3.18.0/bin:$PATH
+module load cmake/3.22.2
 export CRAYPE_LINK_TYPE=DYNAMIC
 export CRAY_CPU_TARGET=$(uname -p)
 
