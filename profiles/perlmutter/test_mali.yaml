@@ -1,0 +1,31 @@
+source_directory: /pscratch/sd/m/mek/MPAS/E3SM
+build_directory: /pscratch/sd/m/mek/MPAS
+build_name: MALI-Test
+test_command: models/mali/run_test.sh
+cdash_section: MALI
+test_timeout: 8820
+tests:
+  - full_integration
+  - echo,landice_dome_2000m_sia_restart_test
+  - echo,landice_dome_2000m_sia_decomposition_test
+  - echo,landice_dome_variable_resolution_sia_restart_test
+  - echo,landice_dome_variable_resolution_sia_decomposition_test
+  - echo,landice_enthalpy_benchmark_A
+  - echo,landice_eismint2_decomposition_test
+  - echo,landice_eismint2_enthalpy_decomposition_test
+  - echo,landice_eismint2_restart_test
+  - echo,landice_eismint2_enthalpy_restart_test
+  - echo,landice_greenland_sia_restart_test
+  - echo,landice_greenland_sia_decomposition_test
+  - echo,landice_hydro_radial_restart_test
+  - echo,landice_hydro_radial_decomposition_test
+  - echo,landice_dome_2000m_fo_decomposition_test
+  - echo,landice_dome_2000m_fo_restart_test
+  - echo,landice_dome_variable_resolution_fo_decomposition_test
+  - echo,landice_dome_variable_resolution_fo_restart_test
+  - echo,landice_circular_shelf_decomposition_test
+  - echo,landice_greenland_fo_decomposition_test
+  - echo,landice_greenland_fo_restart_test
+  - echo,landice_thwaites_decomposition_test
+  - echo,landice_thwaites_restart_test
+  - echo,landice_humboldt_mesh-3km_restart_test_velo-fo_calving-von_mises_stress_damage-threshold_faceMelting

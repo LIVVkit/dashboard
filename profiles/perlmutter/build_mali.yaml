@@ -1,0 +1,7 @@
+source_directory: /pscratch/sd/m/mek/MPAS/E3SM
+build_directory: /pscratch/sd/m/mek/MPAS
+do_update: True
+build_name: MALI-Build
+configure_command: models/mali/perlmutter/configure.sh
+build_command: models/mali/perlmutter/build.sh
+cdash_section: MALI

@@ -1,0 +1,10 @@
+source_directory: /pscratch/sd/m/mek/MPAS/compass
+build_directory: /pscratch/sd/m/mek/MPAS/compass
+do_update: True
+build_name: COMPASS
+configure_command: models/compass/perlmutter/configure.sh
+build_command: models/compass/perlmutter/build.sh
+test_command: models/compass/perlmutter/test.sh
+cdash_section: Nightly
+tests:
+  - compass_version
