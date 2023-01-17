@@ -233,7 +233,8 @@ def parse_compass_log(log):
 
 def mali_compass(suite_name):
     """Parse output of compass v1.0 test suite."""
-    in_dir = Path("/global/cscratch1/sd/mek/MPAS/TestOutput/MALI_Test")
+    # in_dir = Path("/global/cscratch1/sd/mek/MPAS/TestOutput/MALI_Test")
+    in_dir = Path(os.environ["SCRATCH"], "MPAS", "TestOutput", "MALI_Test")
     test_def = Path(in_dir, f"{suite_name}.pickle")
     log_file = Path(in_dir, f"{suite_name}.log")
     run_date = dt.datetime.utcfromtimestamp(log_file.stat().st_ctime)
@@ -287,7 +288,10 @@ def mali_compass(suite_name):
 
     header_text = "\n>>>>>> TESTS {} <<<<<<\n"
     email_text = f"{HLINE}\n|\/| /|| |\n|  |/-||_|\n{HLINE}\n"
-    email_text += f"{'Run on':^10s}\n{run_date.strftime('%Y-%m-%d')}\n{HLINE}\n"
+    email_text += f"{'Run on':^10s}\n"
+    email_text += f"{os.environ['SITE']:^10s}\n"
+    email_text += f"{run_date.strftime('%Y-%m-%d')}\n"
+    email_text += f"{HLINE}\n"
     email_text += f"Tests Run: {len(test_passes) + len(test_fails)}\n"
     email_text += (
         f"{'Passed:':>10s} {len(test_passes)}\n{'Failed:':>10s} {len(test_fails)}\n"
@@ -310,7 +314,7 @@ def mali_compass(suite_name):
 
     subject = (
         f"[MALI Tests] {dt.datetime.now().strftime('%Y-%m-%d')}: "
-        f"{len(test_passes)} / {len(info)} passed"
+        f"{len(test_passes)} / {len(info)} passed on {os.environ['SITE']}"
     )
 
     return subject, email_text

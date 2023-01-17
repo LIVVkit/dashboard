@@ -15,9 +15,9 @@ if [[ -z "${SCRIPT_DIR}" ]]; then
     SCRIPT_DIR=`pwd`
 fi
 if [[ -z "${NERSC_HOST}" ]]; then
-    HOST=$(hostname)
+    MACHINE_HOST=$(hostname)
 else
-    HOST=${NERSC_HOST}
+    MACHINE_HOST=${NERSC_HOST}
 fi
-LOG_FILE=$BASE_DIR/nightly_log_${HOST}_Trilinos.txt
-eval "env TEST_DIRECTORY=$BASE_DIR SCRIPT_DIRECTORY=$BASE_DIR ctest -VV -S $SCRIPT_DIR/components/${HOST}/ctest_nightly_trilinos.cmake" > $LOG_FILE 2>&1
+LOG_FILE=$BASE_DIR/nightly_log_${MACHINE_HOST}_Trilinos.txt
+eval "env TEST_DIRECTORY=$BASE_DIR SCRIPT_DIRECTORY=$BASE_DIR ctest -VV -S $SCRIPT_DIR/components/${MACHINE_HOST}/ctest_nightly_trilinos.cmake" > $LOG_FILE 2>&1
