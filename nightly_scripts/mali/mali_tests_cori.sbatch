@@ -17,4 +17,4 @@ else
     SUBMIT_FLAG=""
 fi
 
-$PY_EXE worker.py profiles/test_mali_cori.yaml --site cori-knl ${SUBMIT_FLAG}
+$PY_EXE worker.py profiles/cori/test_mali.yaml --site ${SITE} ${SUBMIT_FLAG}

@@ -2,9 +2,9 @@ source_directory: /global/cscratch1/sd/mek/MPAS/compass
 build_directory: /global/cscratch1/sd/mek/MPAS/compass
 do_update: True
 build_name: COMPASS
-configure_command: models/compass/cori_configure.sh
-build_command: models/compass/cori_build.sh
-test_command: models/compass/cori_test.sh
+configure_command: models/compass/cori/configure.sh
+build_command: models/compass/cori/build.sh
+test_command: models/compass/cori/test.sh
 cdash_section: Nightly
 tests:
   - compass_version
