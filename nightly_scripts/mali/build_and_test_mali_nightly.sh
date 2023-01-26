@@ -58,8 +58,7 @@ pushd $NIGHTLY_SCRIPT_DIR || exit
 source $CTEST_CONFIG_DIR/mali_modules_${MACHINE_HOST}.sh >& modules_${MACHINE_HOST}.log
 
 printf "CLEAN UP \n$BASE_DIR/build\n$BASE_DIR/src\n"
-rm -rf $BASE_DIR/build
-rm -rf $BASE_DIR/src
+rm -rf $BASE_DIR/build & rm -rf $BASE_DIR/src
 
 # Build required components for MALI (no tests run on these)
 printf "Build components\n"
