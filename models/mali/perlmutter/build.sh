@@ -12,7 +12,7 @@ source $ALB_LIBS_FILE || exit
 MPAS_EXTERNAL_LIBS="$ALBANY_LINK_LIBS -lstdc++"
 
 # make clean intel-nersc \
-make clean gnu-nersc \
+make clean gnu-cray \
 USE_PIO2=true \
 DEBUG=true \
 PIO=$PIO \
