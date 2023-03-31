@@ -6,7 +6,7 @@ module load cray-hdf5-parallel
 module load cray-netcdf-hdf5parallel
 module load cray-parallel-netcdf
 # module load boost/1.78.0-gnu
-module load cmake/3.22.0
+module load cmake/3.24.3
 
 export CRAYPE_LINK_TYPE=DYNAMIC
 export CRAY_CPU_TARGET=$(uname -p)
