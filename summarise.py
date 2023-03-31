@@ -196,7 +196,7 @@ def old_mali():
     email_text += f"{'Passed:':>10s} {len(passes)}\n{'Failed:':>10s} {len(fails)}\n"
     email_text += f"{HLINE}\n"
     txt_line = (
-        lambda _case: f"   {_case.name:41s}: {dt.timedelta(seconds=_case.time)}\n"
+        lambda _case: f"   {_case.name:82s}: {dt.timedelta(seconds=_case.time)}\n"
     )
 
     if passes:
@@ -301,12 +301,12 @@ def mali_compass(suite_name):
     email_text += header_text.format("PASSED")
     for case in test_passes:
         _name = " ".join(case.split("_")[1:-1])
-        email_text += f"{_name:44s}: {info[case]['time']}\n"
+        email_text += f"{_name:82s}: {info[case]['time']}\n"
 
     email_text += header_text.format("FAILED")
     for case in test_fails:
         _name = " ".join(case.split("_")[1:-1])
-        email_text += f"{_name:44s}: {info[case]['time']}\n"
+        email_text += f"{_name:82s}: {info[case]['time']}\n"
 
     email_text += f"\nTOTAL TIME: {total_time_case}\n"
     email_text += get_repo_info()
