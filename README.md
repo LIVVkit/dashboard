@@ -10,8 +10,17 @@ Note:
 * repo exists and branch you want tested checked out already
 
 ----
+## Nightly scripts
+The nightly scripts to be called by (s)cron are in the `nightly_scripts` directory for each model.
+For example for MALI on Perlmutter scron calls:
 
-There are essentially 3 distinct work "phases":
+ - `dashboard/nightly_scripts/mali/build_and_test_mali_perlmutter_nightly.sh`
+ - Which sets up the environment, cleans the build and source code directories then
+ - Submits `build_software.sbatch` where the TPLs, MALI, and COMPASS are built on a shared node
+ - Then the `mali_tests_perlmutter.sbatch` script is submitted to an exclusive node, where the tests are performed
+
+## Use of pyctest
+The MALI build, COMPASS build, and MALI Tests are carried out via `pyctest` where there are essentially 3 distinct work "phases":
 
   - model configuration
   - model building
