@@ -1,0 +1,7 @@
+source_directory: /lustre/orion/atm112/scratch/mkelleher/triton_nightly_testing/triton
+build_directory: /lustre/orion/atm112/scratch/mkelleher/triton_nightly_testing/build
+do_update: True
+build_name: TRITON-Build
+configure_command: models/triton/frontier/configure.sh
+build_command: models/triton/frontier/build.sh
+cdash_section: Nightly
