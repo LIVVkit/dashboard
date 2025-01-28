@@ -33,7 +33,13 @@ def parse_args(cl_args=None):
         action="store_true",
         default=False,
     )
-
+    parser.add_argument(
+        "-D",
+        "--dashboard",
+        help="Main CDASH dashboard",
+        default="LIVVkit",
+        type=str,
+    )
     worker_args = parser.parse_args(cl_args)
     if worker_args.site is None:
         worker_args.site = platform.node()
@@ -47,7 +53,7 @@ def parse_args(cl_args=None):
 
     # NOTE: Just use defaults
     pyctest_args = helpers.ArgumentParser(
-        "LIVVkit",
+        worker_args.dashboard,
         build_profile["source_directory"],
         build_profile["build_directory"],
         drop_site="my.cdash.org",
@@ -113,6 +119,7 @@ def run(build_profile, pyctest_args):
                 f"{build_profile['source_directory']}/Chombo"
             ).split("_")[-1][:-1]
             pyctest.BUILD_NAME += f"_B{_bis_build[0].upper()}_C{_cho_build[0].upper()}"
+
         for test in build_profile["tests"]:
             test_runner = pyctest.test(properties={"TIMEOUT": f"{test_timeout:d}"})
 
@@ -131,6 +138,7 @@ def run(build_profile, pyctest_args):
                 ]
             )
             test_runner.SetProperty("WORKING_DIRECTORY", pyctest.BINARY_DIRECTORY)
+
     pyctest.run(pyctest.ARGUMENTS)
 
 
