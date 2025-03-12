@@ -1,16 +1,14 @@
 #!/usr/bin/env bash
-export MODEL_ROOT=triton
-if [ ! -d $MODEL_ROOT ]; then
+if [ ! -d $TRITON_SRC_DIR ]; then
     git clone https://code.ornl.gov/hydro/triton.git
 fi
 
-pushd $MODEL_ROOT || exit
+pushd $TRITON_SRC_DIR || exit
 git clean -fx || exit
 git pull --ff-only || exit
 popd || exit
 
-export TSROOT=triset
-if [ ! -d $TSROOT ]; then
+if [ ! -d $TRISET_DIR ]; then
     git clone git@code.ornl.gov:hydro/triset.git
 fi
 

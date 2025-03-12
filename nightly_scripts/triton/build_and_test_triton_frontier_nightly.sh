@@ -1,6 +1,6 @@
 #!/bin/bash
 # This is run on scrontab nightly
-
+source /etc/bash.bashrc.local
 source ${HOME}/dashboard/nightly_scripts/triton/triton_env.sh
 
 for DTEST in ${OUT_ROOT}
@@ -14,12 +14,18 @@ done
 
 pushd $DASH_DIR || exit
 if [ ${CTEST_DO_SUBMIT} == "ON" ]; then
-    $PY_EXE worker.py profiles/${MACHINE_HOST}/build_triton.yaml --site ${SITE} -D TRITON -S || exit
-    $PY_EXE worker.py profiles/${MACHINE_HOST}/build_triton_latest.yaml --site ${SITE} -D TRITON -S || exit
+    SUBMIT_FLAG=-S
 else
-    $PY_EXE worker.py profiles/${MACHINE_HOST}/build_triton.yaml --site ${SITE} -D TRITON || exit
-    $PY_EXE worker.py profiles/${MACHINE_HOST}/build_triton_latest.yaml --site ${SITE} -D TRITON || exit
+    SUBMIT_FLAG=
+    # $PY_EXE worker.py profiles/${MACHINE_HOST}/build_triton.yaml --site ${SITE} -D TRITON || exit
+    # $PY_EXE worker.py profiles/${MACHINE_HOST}/build_triton_latest.yaml --site ${SITE} -D TRITON || exit
 fi
+module -t list
+
+$PY_EXE worker.py profiles/${MACHINE_HOST}/build_triton.yaml --site ${SITE} -D TRITON ${SUBMIT_FLAG} || exit
+$PY_EXE worker.py profiles/${MACHINE_HOST}/build_triton_latest.yaml --site ${SITE} -D TRITON ${SUBMIT_FLAG} || exit
+$PY_EXE worker.py profiles/${MACHINE_HOST}/build_triton_kokkos.yaml --site ${SITE} -D TRITON ${SUBMIT_FLAG} || exit
+$PY_EXE worker.py profiles/${MACHINE_HOST}/test_triton.yaml --site ${SITE} -D TRITON ${SUBMIT_FLAG} || exit
 
 # Now submit MALI Tests to queue
 # if [ ${PERFORM_TESTS} == "ON" ]; then

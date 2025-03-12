@@ -41,6 +41,10 @@ echo "RUNNING TESTS ON ${MACHINE_HOST} (${SITE})"
 export PERFORM_TESTS=ON
 
 export TEST_ROOT=/lustre/orion/atm112/scratch/mkelleher/triton_nightly_testing
+
+export TRISET_DIR=${TEST_ROOT}/build/triset
+export TRITON_SRC_DIR=${TEST_ROOT}/build/triton
+
 export DASH_DIR=${HOME}/dashboard
 export CTEST_CONFIG_DIR=${DASH_DIR}/nightly_scripts
 export NIGHTLY_SCRIPT_DIR=${CTEST_CONFIG_DIR}/triton
@@ -49,6 +53,6 @@ export EXE_DIR=$TEST_ROOT/Components
 export INPUT_DIR=/lustre/orion/atm112/proj-shared/mkelleher/inputdata
 # Reference, testing, and archive directories for COMPASS
 export OUT_ROOT=$TEST_ROOT/TestOutput
-export REF_DIR=$OUT_ROOT/baselines
+export REF_DIR=$TEST_ROOT/baselines
 export TEST_DIR_RUN=$OUT_ROOT
 export TEST_DIR_ARCH=$OUT_ROOT/TRITON_`date +"%Y-%m-%d"`
