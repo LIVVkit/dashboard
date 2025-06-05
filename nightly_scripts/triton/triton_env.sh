@@ -40,10 +40,11 @@ echo "RUNNING TESTS ON ${MACHINE_HOST} (${SITE})"
 # Setup modules and environment variables
 export PERFORM_TESTS=ON
 
-export TEST_ROOT=/lustre/orion/atm112/scratch/mkelleher/triton_nightly_testing
+export TEST_ROOT=/lustre/orion/atm112/proj-shared/triton_nightly_testing
 
 export TRISET_DIR=${TEST_ROOT}/build/triset
 export TRITON_SRC_DIR=${TEST_ROOT}/build/triton
+export TRITON_KOKKOS_DIR=${TEST_ROOT}/build/triton_kokkos
 
 export DASH_DIR=${HOME}/dashboard
 export CTEST_CONFIG_DIR=${DASH_DIR}/nightly_scripts

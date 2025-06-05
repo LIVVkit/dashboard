@@ -1,5 +1,5 @@
-source_directory: /lustre/orion/atm112/scratch/mkelleher/triton_nightly_testing/build/triton
-build_directory: /lustre/orion/atm112/scratch/mkelleher/triton_nightly_testing/build
+source_directory: /lustre/orion/atm112/proj-shared/triton_nightly_testing/build/triton
+build_directory: /lustre/orion/atm112/proj-shared/triton_nightly_testing/build
 do_update: True
 build_name: TRITON-Build
 configure_command: models/triton/frontier/configure.sh

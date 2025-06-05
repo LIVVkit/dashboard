@@ -1,0 +1,7 @@
+source_directory: /lustre/orion/atm112/proj-shared/triton_nightly_testing/build/triton_kokkos
+build_directory: /lustre/orion/atm112/proj-shared/triton_nightly_testing/build
+do_update: True
+build_name: TRITON-Kokkos
+configure_command: models/triton/frontier/configure_kokkos.sh
+build_command: models/triton/frontier/build_kokkos.sh
+cdash_section: Nightly

@@ -1,0 +1,13 @@
+source_directory: /lustre/orion/atm112/proj-shared/triton_nightly_testing/build/triton
+build_directory: /lustre/orion/atm112/proj-shared/triton_nightly_testing/TestOutput
+build_name: TRITON-Test
+test_command: models/triton/run_test.sh
+cdash_section: Nightly
+test_timeout: 8820
+tests:
+  - case01
+  - case02a
+  - case02b
+  - case02c
+  - case02d
+  - case03
