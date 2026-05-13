@@ -12,7 +12,7 @@ export ftp_proxy=ftp://proxy.ccs.ornl.gov:3128/
 export http_proxy=http://proxy.ccs.ornl.gov:3128/
 export https_proxy=http://proxy.ccs.ornl.gov:3128/
 export no_proxy='localhost,127.0.0.0/8,*.ccs.ornl.gov'
-CTEST_SCRIPT=testing.cmake
+CTEST_SCRIPT=cmake/nightly_dashboard_test.cmake
 
 TRITON_TEST_DIR=/lustre/orion/atm112/proj-shared/mkelleher/nightly_testing/triton
 ARCH_DIR=/lustre/orion/atm112/proj-shared/mkelleher/nightly_testing/archive
@@ -54,3 +54,4 @@ done
 ARCHIVE_OUT=${ARCH_DIR}/archive-${START_TIME}
 mkdir -p ${ARCHIVE_OUT}
 mv test-build-* ${ARCHIVE_OUT}
+mv ${LOGFILE} ${ARCHIVE_OUT}
